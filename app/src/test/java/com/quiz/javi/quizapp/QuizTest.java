@@ -77,4 +77,19 @@ public class QuizTest {
         // Assert
         Assert.assertEquals(expectedLength, actualLength);
     }
+
+    @Test
+    public void quizReturnsFirstQuestionAfterReachingEnd() {
+
+        // Assert
+        Quiz quiz = new Quiz(new QuestionBank());
+        Question expectedQuestion = quiz.getQuestion(0);
+
+        // Act
+        int firstQuestionAfterEnd = 29;
+        Question actualQuestion = quiz.getQuestion(firstQuestionAfterEnd);
+
+        // Assert
+        assertEquals(expectedQuestion.getText(), actualQuestion.getText());
+    }
 }

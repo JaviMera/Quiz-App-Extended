@@ -32,7 +32,7 @@ public class Quiz {
     }
 
     public Question getQuestion(int questionNumber) {
-        return mQuestions.get(questionNumber);
+        return mQuestions.get(questionNumber % totalQuestions());
     }
 
     public int totalQuestions() {
