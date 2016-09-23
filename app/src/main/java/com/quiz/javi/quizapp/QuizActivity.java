@@ -9,10 +9,13 @@ import android.widget.TextView;
 import java.util.HashMap;
 import java.util.Map;
 
+import teamtreehouse.quizapp.QuestionBank;
+
 public class QuizActivity extends AppCompatActivity implements QuizActivityView{
 
     private Map<Button, Integer> mButtonMap;
     private QuizActivityPresenter mPresenter;
+    private Quiz mQuiz;
 
     TextView mQuestionTextView;
     Button mButtonAnswer1;
@@ -24,11 +27,16 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+        QuestionBank qBank = new QuestionBank();
+        mQuiz = new Quiz(qBank);
+
         mButtonMap = new HashMap<>();
         mPresenter = new QuizActivityPresenter(this);
 
         mQuestionTextView = getView(R.id.questionTextView);
-        mPresenter.updateQuestionTextView("sup");
+
+        Question question = mQuiz.getQuestion(0);
+        mPresenter.updateQuestionTextView(question.getText());
 
         mButtonAnswer1 = getView(R.id.buttonAnswer1);
         mButtonAnswer2 = getView(R.id.buttonAnswer2);
