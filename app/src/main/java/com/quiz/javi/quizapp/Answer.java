@@ -8,11 +8,11 @@ public abstract class Answer {
 
     protected int mAnswer;
 
-    protected Answer(int answer){
-        mAnswer = answer;
+    protected Answer(int value){
+        mAnswer = value;
     }
 
-    public int getAnswer(){
+    public int getValue(){
         return mAnswer;
     }
 }

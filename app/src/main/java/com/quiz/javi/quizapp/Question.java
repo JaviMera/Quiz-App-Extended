@@ -37,7 +37,7 @@ public class Question {
         {
             if(answer instanceof CorrectAnswer)
             {
-                return answer.getAnswer() == choice;
+                return answer.getValue() == choice;
             }
         }
 
@@ -45,10 +45,14 @@ public class Question {
     }
 
 
-    public int getAnswer(int index)
+    public List<Integer> getAnswers()
     {
-        return mAnswers
-                .get(index)
-                .getAnswer();
+        List<Integer> answers = new ArrayList<>();
+        for(Answer answer : mAnswers)
+        {
+            answers.add(answer.getValue());
+        }
+
+        return answers;
     }
 }

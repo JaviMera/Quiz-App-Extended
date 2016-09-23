@@ -4,6 +4,10 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import static org.junit.Assert.assertEquals;
+
 /**
  * Created by Javi on 9/21/2016.
  */
@@ -38,16 +42,21 @@ public class QuestionTest {
     }
 
     @Test
-    public void getAnswer() throws Exception {
+    public void getAnswersReturnsMatchingAnswersToQuestion(){
 
-        // Arrange
+        // Assert
+        List<Integer> expectedAnswers = new ArrayList<>();
+        expectedAnswers.add(7);
+        expectedAnswers.add(6);
+        expectedAnswers.add(8);
+
         question = createQuestion(3,4,7,6,8);
 
         // Act
-        int answer = question.getAnswer(1);
+        List<Integer> actualAnswers = question.getAnswers();
 
         // Assert
-        Assert.assertEquals(6, answer);
+        assertEquals(expectedAnswers, actualAnswers);
     }
 
     private Question createQuestion(int leftAdder, int rightAdder, int correct, int incorrect1, int incorrect2){

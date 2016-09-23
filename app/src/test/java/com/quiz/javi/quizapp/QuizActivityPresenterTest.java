@@ -1,10 +1,13 @@
 package com.quiz.javi.quizapp;
 
+import android.widget.Button;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.cglib.transform.impl.AccessFieldTransformer;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;
@@ -36,5 +39,19 @@ public class QuizActivityPresenterTest {
 
         // Assert
         Mockito.verify(view).setQuestionTextView(question);
+    }
+
+    @Test
+    public void updateButtonAnswerText(){
+
+        // Arrange
+        String answerText = "How about no";
+        Button button = new Button(null);
+
+        // Act
+        presenter.updateButtonAnswerText(button, answerText);
+
+        // Assert
+        Mockito.verify(view).setButtonAnswerText(button, answerText);
     }
 }
