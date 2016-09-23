@@ -33,10 +33,15 @@ public class Question {
 
     public boolean isCorrect(int choice) {
 
-        return mAnswers
-            .stream()
-            .filter(x -> x instanceof CorrectAnswer)
-            .allMatch(x -> x.getAnswer() == choice);
+        for(Answer answer : mAnswers)
+        {
+            if(answer instanceof CorrectAnswer)
+            {
+                return answer.getAnswer() == choice;
+            }
+        }
+
+        return false;
     }
 
 

@@ -14,9 +14,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/questionTextView"
         android:text="Sup fool"
-        android:textAlignment="center"
+        android:gravity="center"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
         android:layout_marginTop="86dp" />
 
     <Button
@@ -33,7 +32,6 @@
         android:id="@+id/buttonAnswer2"
         android:elevation="0dp"
         android:layout_below="@+id/buttonAnswer1"
-        android:layout_alignParentStart="true"
         android:layout_marginTop="19dp" />
 
     <Button
@@ -42,6 +40,5 @@
         android:id="@+id/buttonAnswer3"
         android:elevation="0dp"
         android:layout_marginTop="19dp"
-        android:layout_below="@+id/buttonAnswer2"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/buttonAnswer2" />
 </RelativeLayout>
