@@ -2,31 +2,30 @@ package com.quiz.javi.quizapp;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Queue;
 
 import teamtreehouse.quizapp.QuestionBank;
 
-public class QuizActivity extends AppCompatActivity implements QuizActivityView, View.OnClickListener{
+public class QuizActivity extends AppCompatActivity implements QuizActivityView{
 
-    private Map<Integer, Button> mButtonMap;
+    private Map<Integer, AppCompatButton> mButtonMap;
     private QuizActivityPresenter mPresenter;
     private Quiz mQuiz;
     private int mCurrentQuestion;
 
     TextView mQuestionTextView;
-    Button mButtonAnswer1;
-    Button mButtonAnswer2;
-    Button mButtonAnswer3;
+    AppCompatButton mButtonAnswer1;
+    AppCompatButton mButtonAnswer2;
+    AppCompatButton mButtonAnswer3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,23 +42,63 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView,
         mQuestionTextView = getView(R.id.questionTextView);
 
         mButtonAnswer1 = getView(R.id.buttonAnswer1);
-        mButtonAnswer1.setOnClickListener(this);
-
         mButtonAnswer2 = getView(R.id.buttonAnswer2);
-        mButtonAnswer2.setOnClickListener(this);
-
         mButtonAnswer3 = getView(R.id.buttonAnswer3);
-        mButtonAnswer3.setOnClickListener(this);
 
         mButtonMap.put(0, mButtonAnswer1);
         mButtonMap.put(1, mButtonAnswer2);
         mButtonMap.put(2, mButtonAnswer3);
 
         Question question = mQuiz.getQuestion(mCurrentQuestion);
-        initializeViews(question);
+        nextQuestion(question);
     }
 
+    public void buttonAnswerOnClick(View v){
 
+        Question question = mQuiz.getQuestion(mCurrentQuestion);
+        String buttonText = getButtonText(v);
+        String toastMessage = getResultMessage(buttonText,question);
+
+        Toast.makeText(
+                this,
+                toastMessage,
+                Toast.LENGTH_SHORT).show();
+
+        mCurrentQuestion++;
+        question = mQuiz.getQuestion(mCurrentQuestion);
+        nextQuestion(question);
+    }
+
+    private String getButtonText(View v){
+
+        String text = "";
+        switch(v.getId())
+        {
+            case R.id.buttonAnswer1:
+                text = mButtonAnswer1.getText().toString();
+                break;
+            case R.id.buttonAnswer2:
+                text = mButtonAnswer2.getText().toString();
+                break;
+            case R.id.buttonAnswer3:
+                text = mButtonAnswer3.getText().toString();
+                break;
+        }
+
+        return text;
+    }
+    private String getResultMessage(String buttonText, Question question){
+
+        int buttonValue = Integer.parseInt(buttonText);
+        if(question.isCorrect(buttonValue))
+        {
+            return "Correct Answer!!";
+        }
+        else
+        {
+            return "Wrong Answer :(, please don't cry";
+        }
+    }
 
     @Override
     public void setQuestionTextView(String text) {
@@ -71,25 +110,17 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView,
         button.setText(text);
     }
 
-    @Override
-    public void onClick(View v) {
-
-        mCurrentQuestion++;
-        Question question = mQuiz.getQuestion(mCurrentQuestion);
-        initializeViews(question);
-    }
-
-    private void initializeViews(Question question){
+    private void nextQuestion(Question question){
 
         mPresenter.updateQuestionTextView(question.getText());
 
         List<Integer> answers = question.getAnswers();
-        for(Map.Entry<Integer, Button> entry : mButtonMap.entrySet())
+        for(Map.Entry<Integer, AppCompatButton> entry : mButtonMap.entrySet())
         {
             int value = answers.get(entry.getKey());
             entry
-                    .getValue()
-                    .setText(Integer.toString(value));
+                .getValue()
+                .setText(String.format(Locale.ENGLISH, "%d", value));
         }
     }
 
