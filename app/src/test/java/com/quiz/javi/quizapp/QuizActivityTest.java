@@ -48,4 +48,17 @@ public class QuizActivityTest {
         // Arrange
         Assert.assertEquals(question.getText(), activity.mQuestionTextView.getText().toString());
     }
+
+    @Test
+    public void questionNotReviewedHasNoButtonsChecked() throws Exception {
+
+        // Arrange
+        RadioButton rButton = (RadioButton)activity.mAnswersRadioGroup.getChildAt(0);
+        
+        // Act
+        rButton.performClick();
+
+        // Assert
+        Assert.assertFalse(rButton.isChecked());
+    }
 }

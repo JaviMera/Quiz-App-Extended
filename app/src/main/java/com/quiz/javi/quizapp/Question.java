@@ -12,6 +12,7 @@ public class Question {
     private int mLeftAdder;
     private int mRightAdder;
     private List<Answer> mAnswers;
+    private boolean mReviewed;
 
     public Question(int leftAdder,
                     int rightAdder,
@@ -54,5 +55,13 @@ public class Question {
         }
 
         return answers;
+    }
+
+    public boolean getReviewed() {
+        return mReviewed;
+    }
+
+    public void setReviewed(boolean reviewed) {
+        mReviewed = reviewed;
     }
 }

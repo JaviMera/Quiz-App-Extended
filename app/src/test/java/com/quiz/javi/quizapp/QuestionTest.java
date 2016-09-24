@@ -6,7 +6,10 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Created by Javi on 9/21/2016.
@@ -38,7 +41,7 @@ public class QuestionTest {
         boolean passed = question.isCorrect(7);
 
         // Assert
-        Assert.assertTrue(passed);
+        assertTrue(passed);
     }
 
     @Test
@@ -57,6 +60,33 @@ public class QuestionTest {
 
         // Assert
         assertEquals(expectedAnswers, actualAnswers);
+    }
+
+    @Test
+    public void getReviewedReturnsFalseAtInitialization(){
+
+        // Assert
+        question = createQuestion(1,2,3,4,5);
+
+        // Act
+        boolean isReviewed = question.getReviewed();
+
+        // Assert
+        assertFalse(isReviewed);
+    }
+
+    @Test
+    public void getReviewedReturnsTrueAfterSelectingAnswer(){
+
+        // Assert
+        question = createQuestion(1,2,3,4,5);
+
+        // Act
+        question.isCorrect(4);
+        question.setReviewed(true);
+
+        // Assert
+        assertTrue(question.getReviewed());
     }
 
     private Question createQuestion(int leftAdder, int rightAdder, int correct, int incorrect1, int incorrect2){

@@ -1,23 +1,18 @@
 package com.quiz.javi.quizapp;
 
+import android.provider.MediaStore;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Queue;
 
 import teamtreehouse.quizapp.QuestionBank;
@@ -94,9 +89,14 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         Queue<Integer> values = new LinkedList<>(question.getAnswers());
         for(int i = 0 ; i < mAnswerButtons.size() ; i++)
         {
-            mAnswerButtons
-                .valueAt(i)
-                .setText(String.format(Locale.ENGLISH,"%d", values.poll()));
+            RadioButton rButton = (RadioButton)mAnswerButtons.valueAt(i);
+
+            rButton.setText(String.format(Locale.ENGLISH,"%d", values.poll()));
+
+            if(!question.getReviewed())
+            {
+                rButton.setChecked(false);
+            }
         }
     }
 
