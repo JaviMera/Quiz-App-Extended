@@ -2,69 +2,75 @@ package com.quiz.javi.quizapp;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Queue;
 
 import teamtreehouse.quizapp.QuestionBank;
 
 public class QuizActivity extends AppCompatActivity implements QuizActivityView{
 
-    private Map<Integer, AppCompatButton> mButtonMap;
     private QuizActivityPresenter mPresenter;
     private Quiz mQuiz;
     private int mCurrentQuestion;
 
     TextView mQuestionTextView;
-    AppCompatButton mButtonAnswer1;
-    AppCompatButton mButtonAnswer2;
-    AppCompatButton mButtonAnswer3;
+    RadioGroup mAnswersRadioGroup;
+    Map<Integer, RadioButton> mAnswerButtons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+        mAnswerButtons = new HashMap<>();
         QuestionBank qBank = new QuestionBank();
         mQuiz = new Quiz(qBank);
         mCurrentQuestion = 0;
 
-        mButtonMap = new HashMap<>();
         mPresenter = new QuizActivityPresenter(this);
 
         mQuestionTextView = getView(R.id.questionTextView);
+        mAnswersRadioGroup = getView(R.id.radioButtonGroup);
+        for(int child = 0 ; child < mAnswersRadioGroup.getChildCount(); child++)
+        {
+            RadioButton rButton = (RadioButton)mAnswersRadioGroup.getChildAt(child);
+            mAnswerButtons.put(rButton.getId(), rButton);
+        }
 
-        mButtonAnswer1 = getView(R.id.buttonAnswer1);
-        mButtonAnswer2 = getView(R.id.buttonAnswer2);
-        mButtonAnswer3 = getView(R.id.buttonAnswer3);
+        mAnswersRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-        mButtonMap.put(0, mButtonAnswer1);
-        mButtonMap.put(1, mButtonAnswer2);
-        mButtonMap.put(2, mButtonAnswer3);
+                RadioButton rButton = mAnswerButtons.get(checkedId);
+                String buttonText = getButtonText(rButton);
+                Question question = mQuiz.getQuestion(mCurrentQuestion);
+                String toastMessage = getResultMessage(buttonText,question);
+
+                Toast.makeText(
+                        group.getContext(),
+                        toastMessage,
+                        Toast.LENGTH_SHORT).show();
+
+                mCurrentQuestion++;
+                Question newQuestion = mQuiz.getQuestion(mCurrentQuestion);
+                nextQuestion(newQuestion);
+            }
+        });
 
         Question question = mQuiz.getQuestion(mCurrentQuestion);
-        nextQuestion(question);
-    }
-
-    public void buttonAnswerOnClick(View v){
-
-        Question question = mQuiz.getQuestion(mCurrentQuestion);
-        String buttonText = getButtonText(v);
-        String toastMessage = getResultMessage(buttonText,question);
-
-        Toast.makeText(
-                this,
-                toastMessage,
-                Toast.LENGTH_SHORT).show();
-
-        mCurrentQuestion++;
-        question = mQuiz.getQuestion(mCurrentQuestion);
         nextQuestion(question);
     }
 
@@ -74,19 +80,19 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
     }
 
     @Override
-    public void setButtonAnswerText(Button button, String text) {
-        button.setText(text);
+    public void setRadioButtonText(int index, String text) {
+        RadioButton rButton = (RadioButton)mAnswersRadioGroup.getChildAt(index);
+        rButton.setText(text);
     }
 
     private void nextQuestion(Question question){
 
         mPresenter.updateQuestionTextView(question.getText());
 
-        List<Integer> answers = question.getAnswers();
-        for(Map.Entry<Integer, AppCompatButton> entry : mButtonMap.entrySet())
+        Queue<Integer> values = new LinkedList<>(question.getAnswers());
+        for(RadioButton rb : mAnswerButtons.values())
         {
-            int value = answers.get(entry.getKey());
-            mPresenter.updateButtonAnswerText(entry.getValue(), String.valueOf(value));
+            rb.setText(String.format(Locale.ENGLISH,"%d", values.poll()));
         }
     }
 
@@ -94,23 +100,9 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         return (T) findViewById(id);
     }
 
-    private String getButtonText(View v){
+    private String getButtonText(RadioButton rb){
 
-        String text = "";
-        switch(v.getId())
-        {
-            case R.id.buttonAnswer1:
-                text = mButtonAnswer1.getText().toString();
-                break;
-            case R.id.buttonAnswer2:
-                text = mButtonAnswer2.getText().toString();
-                break;
-            case R.id.buttonAnswer3:
-                text = mButtonAnswer3.getText().toString();
-                break;
-        }
-
-        return text;
+        return rb.getText().toString();
     }
 
     private String getResultMessage(String buttonText, Question question){

@@ -18,7 +18,7 @@ public class QuizActivityPresenter {
         mView.setQuestionTextView(question);
     }
 
-    public void updateButtonAnswerText(Button button, String answerText) {
-        mView.setButtonAnswerText(button, answerText);
+    public void updateRadioButtonText(int index, String text){
+        mView.setRadioButtonText(index, text);
     }
 }

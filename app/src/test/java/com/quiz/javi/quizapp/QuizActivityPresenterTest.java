@@ -46,12 +46,12 @@ public class QuizActivityPresenterTest {
 
         // Arrange
         String answerText = "How about no";
-        Button button = new Button(null);
+        int index = 0;
 
         // Act
-        presenter.updateButtonAnswerText(button, answerText);
+        presenter.updateRadioButtonText(index, answerText);
 
         // Assert
-        Mockito.verify(view).setButtonAnswerText(button, answerText);
+        Mockito.verify(view).setRadioButtonText(index, answerText);
     }
 }
