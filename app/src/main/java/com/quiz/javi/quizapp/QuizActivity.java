@@ -1,5 +1,6 @@
 package com.quiz.javi.quizapp;
 
+import android.content.Context;
 import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -103,17 +104,13 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
                     return;
 
                 RadioButton rButton = mAnswerButtons.get(checkedId);
-
                 Question question = mQuiz.getQuestion(mCurrentQuestion);
                 int answerSelected = Integer.parseInt(rButton.getText().toString());
                 question.setAnswerSelected(answerSelected);
                 question.setReviewed(true);
 
                 String toastMessage = getResultMessage(question);
-                Toast.makeText(
-                        group.getContext(),
-                        toastMessage,
-                        Toast.LENGTH_SHORT).show();
+                displayResult(group.getContext(), toastMessage);
             }
         };
     }
@@ -156,5 +153,13 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         {
             return "Wrong Answer :(, please don't cry";
         }
+    }
+
+    private void displayResult(Context ctx, String message){
+
+        Toast.makeText(
+                ctx,
+                message,
+                Toast.LENGTH_SHORT).show();
     }
 }
