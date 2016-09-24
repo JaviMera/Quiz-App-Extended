@@ -1,11 +1,14 @@
 package com.quiz.javi.quizapp;
 
-import android.provider.MediaStore;
-import android.support.v4.util.SparseArrayCompat;
+import android.media.Image;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -22,10 +25,11 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
     private QuizActivityPresenter mPresenter;
     private Quiz mQuiz;
     private int mCurrentQuestion;
+    private SparseArray<RadioButton> mAnswerButtons;
 
     TextView mQuestionTextView;
     RadioGroup mAnswersRadioGroup;
-    SparseArray<RadioButton> mAnswerButtons;
+    ImageButton mNextQuestionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +40,29 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         QuestionBank qBank = new QuestionBank();
         mQuiz = new Quiz(qBank);
         mCurrentQuestion = 0;
-
         mPresenter = new QuizActivityPresenter(this);
+
+        mNextQuestionButton = getView(R.id.nextQuestionButton);
+        mNextQuestionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentQuestion++;
+                Question newQuestion = mQuiz.getQuestion(mCurrentQuestion);
+                displayQuestion(newQuestion);
+
+                mAnswersRadioGroup.setOnCheckedChangeListener(null);
+                if(!newQuestion.getReviewed())
+                {
+                    for(int child = 0 ; child < mAnswersRadioGroup.getChildCount(); child++)
+                    {
+                        RadioButton rButton = (RadioButton)mAnswersRadioGroup.getChildAt(child);
+                        rButton.setChecked(false);
+                    }
+                }
+
+                mAnswersRadioGroup.setOnCheckedChangeListener(checkedListener());
+            }
+        });
 
         mQuestionTextView = getView(R.id.questionTextView);
         mAnswersRadioGroup = getView(R.id.radioButtonGroup);
@@ -47,7 +72,14 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
             mAnswerButtons.append(rButton.getId(), rButton);
         }
 
-        mAnswersRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        mAnswersRadioGroup.setOnCheckedChangeListener(checkedListener());
+
+        Question question = mQuiz.getQuestion(mCurrentQuestion);
+        displayQuestion(question);
+    }
+
+    private RadioGroup.OnCheckedChangeListener checkedListener() {
+        return new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
@@ -60,15 +92,8 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
                         group.getContext(),
                         toastMessage,
                         Toast.LENGTH_SHORT).show();
-
-                mCurrentQuestion++;
-                Question newQuestion = mQuiz.getQuestion(mCurrentQuestion);
-                nextQuestion(newQuestion);
             }
-        });
-
-        Question question = mQuiz.getQuestion(mCurrentQuestion);
-        nextQuestion(question);
+        };
     }
 
     @Override
@@ -82,21 +107,16 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         rButton.setText(text);
     }
 
-    private void nextQuestion(Question question){
+    private void displayQuestion(Question question){
 
         mPresenter.updateQuestionTextView(question.getText());
 
         Queue<Integer> values = new LinkedList<>(question.getAnswers());
         for(int i = 0 ; i < mAnswerButtons.size() ; i++)
         {
-            RadioButton rButton = (RadioButton)mAnswerButtons.valueAt(i);
+            RadioButton rButton = mAnswerButtons.valueAt(i);
 
             rButton.setText(String.format(Locale.ENGLISH,"%d", values.poll()));
-
-            if(!question.getReviewed())
-            {
-                rButton.setChecked(false);
-            }
         }
     }
 

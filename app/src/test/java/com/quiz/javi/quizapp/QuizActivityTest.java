@@ -12,6 +12,8 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import teamtreehouse.quizapp.QuestionBank;
@@ -32,21 +34,24 @@ public class QuizActivityTest {
     }
 
     @Test
-    public void answerSelectGoesToNextQuestion(){
+    public void nextButtonClickShowsNextQuestion(){
 
         // Arrange
-        int randomChild = new Random().nextInt(activity.mAnswersRadioGroup.getChildCount());
         Quiz quiz = new Quiz(new QuestionBank());
         Question question = quiz.getQuestion(1);
 
         // Act
-        activity
-            .mAnswersRadioGroup
-            .getChildAt(randomChild)
-            .performClick();
+        activity.mNextQuestionButton.performClick();
 
         // Arrange
         Assert.assertEquals(question.getText(), activity.mQuestionTextView.getText().toString());
+
+        List<Integer> actualAnswers = new ArrayList<>();
+        actualAnswers.add(Integer.parseInt(((RadioButton)activity.mAnswersRadioGroup.getChildAt(0)).getText().toString()));
+        actualAnswers.add(Integer.parseInt(((RadioButton)activity.mAnswersRadioGroup.getChildAt(1)).getText().toString()));
+        actualAnswers.add(Integer.parseInt(((RadioButton)activity.mAnswersRadioGroup.getChildAt(2)).getText().toString()));
+
+        Assert.assertEquals(question.getAnswers(), actualAnswers);
     }
 
     @Test
@@ -54,9 +59,10 @@ public class QuizActivityTest {
 
         // Arrange
         RadioButton rButton = (RadioButton)activity.mAnswersRadioGroup.getChildAt(0);
-        
-        // Act
         rButton.performClick();
+
+        // Act
+        activity.mNextQuestionButton.performClick();
 
         // Assert
         Assert.assertFalse(rButton.isChecked());
