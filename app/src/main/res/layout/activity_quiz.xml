@@ -16,7 +16,12 @@
         android:text="Sup fool"
         android:gravity="center"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="86dp" />
+        android:layout_marginTop="86dp"
+        android:textSize="24sp"
+        android:typeface="serif"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal|bold"
+        android:textAlignment="center" />
 
     <Button
         android:layout_width="match_parent"

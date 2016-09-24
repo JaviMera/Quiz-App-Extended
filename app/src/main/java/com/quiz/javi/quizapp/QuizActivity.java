@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import teamtreehouse.quizapp.QuestionBank;
@@ -69,37 +68,6 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         nextQuestion(question);
     }
 
-    private String getButtonText(View v){
-
-        String text = "";
-        switch(v.getId())
-        {
-            case R.id.buttonAnswer1:
-                text = mButtonAnswer1.getText().toString();
-                break;
-            case R.id.buttonAnswer2:
-                text = mButtonAnswer2.getText().toString();
-                break;
-            case R.id.buttonAnswer3:
-                text = mButtonAnswer3.getText().toString();
-                break;
-        }
-
-        return text;
-    }
-    private String getResultMessage(String buttonText, Question question){
-
-        int buttonValue = Integer.parseInt(buttonText);
-        if(question.isCorrect(buttonValue))
-        {
-            return "Correct Answer!!";
-        }
-        else
-        {
-            return "Wrong Answer :(, please don't cry";
-        }
-    }
-
     @Override
     public void setQuestionTextView(String text) {
         mQuestionTextView.setText(text);
@@ -118,13 +86,43 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         for(Map.Entry<Integer, AppCompatButton> entry : mButtonMap.entrySet())
         {
             int value = answers.get(entry.getKey());
-            entry
-                .getValue()
-                .setText(String.format(Locale.ENGLISH, "%d", value));
+            mPresenter.updateButtonAnswerText(entry.getValue(), String.valueOf(value));
         }
     }
 
     private <T extends View> T getView(int id){
         return (T) findViewById(id);
+    }
+
+    private String getButtonText(View v){
+
+        String text = "";
+        switch(v.getId())
+        {
+            case R.id.buttonAnswer1:
+                text = mButtonAnswer1.getText().toString();
+                break;
+            case R.id.buttonAnswer2:
+                text = mButtonAnswer2.getText().toString();
+                break;
+            case R.id.buttonAnswer3:
+                text = mButtonAnswer3.getText().toString();
+                break;
+        }
+
+        return text;
+    }
+
+    private String getResultMessage(String buttonText, Question question){
+
+        int buttonValue = Integer.parseInt(buttonText);
+        if(question.isCorrect(buttonValue))
+        {
+            return "Correct Answer!!";
+        }
+        else
+        {
+            return "Wrong Answer :(, please don't cry";
+        }
     }
 }
