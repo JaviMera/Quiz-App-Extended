@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import junit.framework.Assert;
+
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Before;
@@ -24,6 +26,7 @@ import teamtreehouse.quizapp.QuestionBank;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
@@ -33,18 +36,13 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class QuizActivityUITest {
 
-//    @Rule
-//    public ActivityTestRule<QuizActivity> rule = new ActivityTestRule<QuizActivity>(QuizActivity.class);
-//
-//    List<RadioButton> rButtons;
-//
-//    @Before
-//    public void setUp ()throws Exception {
-//        rButtons = new ArrayList<>();
-//        RadioGroup group = (RadioGroup)onView(withId(R.id.radioButtonGroup));
-//        for(View v : )
-//    }
-//
+    @Rule
+    public ActivityTestRule<QuizActivity> rule = new ActivityTestRule<QuizActivity>(QuizActivity.class);
+
+    @Before
+    public void setUp ()throws Exception {
+    }
+
 //    @Test
 //    public void radioButtonAnswerClickGoesToNextQuestion() throws Exception{
 //

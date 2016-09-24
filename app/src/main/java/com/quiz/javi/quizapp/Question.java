@@ -13,6 +13,8 @@ public class Question {
     private int mRightAdder;
     private List<Answer> mAnswers;
     private boolean mReviewed;
+    private int mAnswerSelected;
+    private int answerSelected;
 
     public Question(int leftAdder,
                     int rightAdder,
@@ -32,13 +34,13 @@ public class Question {
         return "What is " + mLeftAdder + " + " + mRightAdder + "?";
     }
 
-    public boolean isCorrect(int choice) {
+    public boolean isCorrect() {
 
         for(Answer answer : mAnswers)
         {
-            if(answer instanceof CorrectAnswer)
+            if(answer.getSelected())
             {
-                return answer.getValue() == choice;
+                return answer instanceof CorrectAnswer;
             }
         }
 
@@ -63,5 +65,33 @@ public class Question {
 
     public void setReviewed(boolean reviewed) {
         mReviewed = reviewed;
+    }
+
+    public void setAnswerSelected(int answerSelected){
+
+        for(Answer answer : mAnswers)
+        {
+            if(answer.getValue() == answerSelected)
+            {
+                answer.select();
+            }
+            else
+            {
+                answer.deselect();
+            }
+        }
+    }
+
+    public int getAnswerSelected() {
+
+        for(Answer answer : mAnswers)
+        {
+            if(answer.getSelected())
+            {
+                return answer.getValue();
+            }
+        }
+
+        return -1;
     }
 }

@@ -32,16 +32,43 @@ public class QuestionTest {
     }
 
     @Test
-    public void isCorrect() throws Exception {
+    public void setRightAnswerSelectedReturnsCorrect() throws Exception {
 
         // Arrange
-        question = createQuestion(3,4,7,6,8);
+        Question question = createQuestion(2,3,5,4,6);
 
         // Act
-        boolean passed = question.isCorrect(7);
+        question.setAnswerSelected(5);
 
         // Assert
-        assertTrue(passed);
+        Assert.assertTrue(question.isCorrect());
+    }
+
+    @Test
+    public void setWrongAnswerSelectedReturnsIncorrect() throws Exception {
+
+        // Arrange
+        Question question = createQuestion(2,3,5,4,6);
+
+        // Act
+        question.setAnswerSelected(4);
+
+        // Assert
+        Assert.assertFalse(question.isCorrect());
+    }
+
+    @Test
+    public void getAnswerSelected() throws Exception {
+
+        // Arrange
+        Question question = createQuestion(2,3,5,4,6);
+        int expected = 4;
+        // Act
+        question.setAnswerSelected(expected);
+        int actual = question.getAnswerSelected();
+
+        // Assert
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -82,7 +109,7 @@ public class QuestionTest {
         question = createQuestion(1,2,3,4,5);
 
         // Act
-        question.isCorrect(4);
+        question.setAnswerSelected(4);
         question.setReviewed(true);
 
         // Assert

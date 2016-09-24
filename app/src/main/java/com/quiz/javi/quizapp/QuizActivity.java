@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Queue;
@@ -22,9 +25,11 @@ import teamtreehouse.quizapp.QuestionBank;
 
 public class QuizActivity extends AppCompatActivity implements QuizActivityView{
 
+    private boolean mNextQuestionButtonClicked;
+    private int mCurrentQuestion;
+
     private QuizActivityPresenter mPresenter;
     private Quiz mQuiz;
-    private int mCurrentQuestion;
     private SparseArray<RadioButton> mAnswerButtons;
 
     TextView mQuestionTextView;
@@ -46,21 +51,27 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         mNextQuestionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Use this flag to not call the Toast message code, inside of CheckedChange, when the Next button is pressed
+                mNextQuestionButtonClicked = true;
+
+                mAnswersRadioGroup.clearCheck();
                 mCurrentQuestion++;
                 Question newQuestion = mQuiz.getQuestion(mCurrentQuestion);
                 displayQuestion(newQuestion);
 
-                mAnswersRadioGroup.setOnCheckedChangeListener(null);
-                if(!newQuestion.getReviewed())
+                if(newQuestion.getReviewed())
                 {
-                    for(int child = 0 ; child < mAnswersRadioGroup.getChildCount(); child++)
-                    {
-                        RadioButton rButton = (RadioButton)mAnswersRadioGroup.getChildAt(child);
-                        rButton.setChecked(false);
+                    for (int child = 0; child < mAnswersRadioGroup.getChildCount(); child++) {
+                        RadioButton rButton = (RadioButton) mAnswersRadioGroup.getChildAt(child);
+                        int rButtonAnswer = Integer.parseInt(rButton.getText().toString());
+
+                        if(newQuestion.getAnswerSelected() == rButtonAnswer){
+                            mAnswerButtons.get(rButton.getId()).setChecked(true);
+                        }
                     }
                 }
 
-                mAnswersRadioGroup.setOnCheckedChangeListener(checkedListener());
+                mNextQuestionButtonClicked = false;
             }
         });
 
@@ -83,11 +94,22 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                RadioButton rButton = mAnswerButtons.get(checkedId);
-                String buttonText = getButtonText(rButton);
-                Question question = mQuiz.getQuestion(mCurrentQuestion);
-                String toastMessage = getResultMessage(buttonText,question);
+                // Avoid calling the Toast code, if this Listener has been fired by calling radioGroup.clearCheck();
+                if(group.getCheckedRadioButtonId() == -1)
+                    return;
 
+                // Avoid calling the Toast code, if this Listener has been fired by pressing the Next Button
+                if(mNextQuestionButtonClicked)
+                    return;
+
+                RadioButton rButton = mAnswerButtons.get(checkedId);
+
+                Question question = mQuiz.getQuestion(mCurrentQuestion);
+                int answerSelected = Integer.parseInt(rButton.getText().toString());
+                question.setAnswerSelected(answerSelected);
+                question.setReviewed(true);
+
+                String toastMessage = getResultMessage(question);
                 Toast.makeText(
                         group.getContext(),
                         toastMessage,
@@ -124,15 +146,9 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         return (T) findViewById(id);
     }
 
-    private String getButtonText(RadioButton rb){
+    private String getResultMessage(Question question){
 
-        return rb.getText().toString();
-    }
-
-    private String getResultMessage(String buttonText, Question question){
-
-        int buttonValue = Integer.parseInt(buttonText);
-        if(question.isCorrect(buttonValue))
+        if(question.isCorrect())
         {
             return "Correct Answer!!";
         }

@@ -67,4 +67,20 @@ public class QuizActivityTest {
         // Assert
         Assert.assertFalse(rButton.isChecked());
     }
+
+    @Test
+    public void questionReviewedHasSelectedAnswerChecked() throws Exception {
+
+        // Arrange
+        RadioButton rButton = (RadioButton)activity.mAnswersRadioGroup.getChildAt(0);
+        rButton.performClick();
+
+        // Act
+        // Loop 29 times (0-28) to get back to the first question ,and see if it is checked
+        for(int i = 0 ; i < 29 ; i++)
+            activity.mNextQuestionButton.performClick();
+
+        // Assert
+        Assert.assertTrue(rButton.isChecked());
+    }
 }
