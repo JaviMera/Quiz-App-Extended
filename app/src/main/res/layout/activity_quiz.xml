@@ -11,10 +11,9 @@
     tools:context="com.quiz.javi.quizapp.QuizActivity">
 
     <TextView
+        android:id="@+id/questionTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/questionTextView"
-        android:text="Sup fool"
         android:gravity="center"
         android:layout_alignParentTop="true"
         android:layout_marginTop="86dp"
@@ -25,59 +24,50 @@
         android:textAlignment="center" />
 
     <RadioGroup
+        android:id="@+id/radioButtonGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/radioButtonGroup"
+        android:layout_marginTop="54dp"
+        android:filterTouchesWhenObscured="false"
         android:layout_below="@+id/questionTextView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="122dp"
-        android:fitsSystemWindows="false"
-        android:filterTouchesWhenObscured="false">
+        android:layout_alignParentStart="true">
 
         <RadioButton
-            android:text="RadioButton"
+            android:id="@+id/radioButton1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/radioButton1"
             android:checked="false"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="30dp"
-            android:layout_gravity="left"
+            android:layout_margin="15dp"
+            android:layout_gravity="start"
             android:textSize="20sp"/>
 
         <RadioButton
-            android:text="RadioButton"
+            android:id="@+id/radioButton2"
             android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/radioButton2"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="30dp"
-            android:layout_gravity="left" />
+            android:layout_margin="15dp"
+            android:layout_gravity="start" />
 
         <RadioButton
-            android:text="RadioButton"
+            android:id="@+id/radioButton3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/radioButton3"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="30dp"
-            android:layout_gravity="left"
+            android:layout_margin="15dp"
+            android:layout_gravity="start"
             android:textSize="20sp"/>
 
     </RadioGroup>
 
-    <ImageButton
+    <Button
         android:id="@+id/nextQuestionButton"
+        android:text="@string/submit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/ic_menu_forward"
-        android:elevation="0dp"
-        android:scaleType="fitXY"
-        android:background="#ffffff"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="34dp" />
 
 </RelativeLayout>

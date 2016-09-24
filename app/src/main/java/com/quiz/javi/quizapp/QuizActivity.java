@@ -35,7 +35,7 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
 
     TextView mQuestionTextView;
     RadioGroup mAnswersRadioGroup;
-    ImageButton mNextQuestionButton;
+    AppCompatButton mNextQuestionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
