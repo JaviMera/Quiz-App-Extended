@@ -1,7 +1,9 @@
 package com.quiz.javi.quizapp;
 
+import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -28,14 +30,14 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
 
     TextView mQuestionTextView;
     RadioGroup mAnswersRadioGroup;
-    Map<Integer, RadioButton> mAnswerButtons;
+    SparseArray<RadioButton> mAnswerButtons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        mAnswerButtons = new HashMap<>();
+        mAnswerButtons = new SparseArray<>();
         QuestionBank qBank = new QuestionBank();
         mQuiz = new Quiz(qBank);
         mCurrentQuestion = 0;
@@ -47,7 +49,7 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         for(int child = 0 ; child < mAnswersRadioGroup.getChildCount(); child++)
         {
             RadioButton rButton = (RadioButton)mAnswersRadioGroup.getChildAt(child);
-            mAnswerButtons.put(rButton.getId(), rButton);
+            mAnswerButtons.append(rButton.getId(), rButton);
         }
 
         mAnswersRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -90,9 +92,11 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         mPresenter.updateQuestionTextView(question.getText());
 
         Queue<Integer> values = new LinkedList<>(question.getAnswers());
-        for(RadioButton rb : mAnswerButtons.values())
+        for(int i = 0 ; i < mAnswerButtons.size() ; i++)
         {
-            rb.setText(String.format(Locale.ENGLISH,"%d", values.poll()));
+            mAnswerButtons
+                .valueAt(i)
+                .setText(String.format(Locale.ENGLISH,"%d", values.poll()));
         }
     }
 
