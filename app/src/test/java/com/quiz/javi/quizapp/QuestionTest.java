@@ -91,30 +91,30 @@ public class QuestionTest {
     }
 
     @Test
-    public void getReviewedReturnsFalseAtInitialization(){
+    public void getSelectedAnswerReturnsNegativeAtInit(){
 
         // Assert
         question = createQuestion(1,1,2,3,4,5);
 
         // Act
-        boolean isReviewed = question.getReviewed();
+        int answer = question.getAnswerSelected();
 
         // Assert
-        assertFalse(isReviewed);
+        Assert.assertEquals(-1, answer);
     }
 
     @Test
-    public void getReviewedReturnsTrueAfterSelectingAnswer(){
+    public void getAnswerSelectedChoiceSelected(){
 
         // Assert
         question = createQuestion(1,1,2,3,4,5);
 
         // Act
         question.setAnswerSelected(4);
-        question.setReviewed(true);
 
         // Assert
-        assertTrue(question.getReviewed());
+        int answer = question.getAnswerSelected();
+        Assert.assertEquals(4, answer);
     }
 
     @Test

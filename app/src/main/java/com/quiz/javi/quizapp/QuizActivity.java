@@ -11,9 +11,10 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
-import java.util.Queue;
 
 import teamtreehouse.quizapp.QuestionBank;
 
@@ -46,9 +47,9 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
             @Override
             public void onClick(View v) {
 
-                if(mAnswersRadioGroup.getCheckedRadioButtonId() != -1)
+                if(mCurrentQuestion.getAnswerSelected() != -1)
                 {
-                    String toastMessage = getResultMessage(mCurrentQuestion );
+                    String toastMessage = getResultMessage(mCurrentQuestion);
                     displayResult(v.getContext(), toastMessage);
                 }
 
@@ -59,7 +60,7 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
                 mCurrentQuestion = mQuiz.getQuestion();
                 setQuestion(mCurrentQuestion);
 
-                if(mCurrentQuestion.getReviewed())
+                if(mCurrentQuestion.getAnswerSelected() != -1)
                 {
                     for (int child = 0; child < mAnswersRadioGroup.getChildCount(); child++) {
                         RadioButton rButton = (RadioButton) mAnswersRadioGroup.getChildAt(child);
@@ -108,7 +109,6 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
                 RadioButton rButton = mAnswerButtons.get(checkedId);
                 int answerSelected = Integer.parseInt(rButton.getText().toString());
                 mCurrentQuestion .setAnswerSelected(answerSelected);
-                mCurrentQuestion .setReviewed(true);
             }
         };
     }
@@ -134,10 +134,11 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         mPresenter.updateQuestionNumberText(String.format(Locale.ENGLISH, "%d )", question.getNumber()));
         mPresenter.updateQuestionText(question.getText());
 
-        Queue<Integer> values = new LinkedList<>(question.getAnswers());
+        List<Integer> values = new ArrayList<>(question.getAnswers());
+        Collections.shuffle(values);
         for(int i = 0 ; i < mAnswerButtons.size() ; i++)
         {
-            mPresenter.updateRadioButtonText(i, String.format(Locale.ENGLISH,"%d", values.poll()));
+            mPresenter.updateRadioButtonText(i, String.format(Locale.ENGLISH,"%d", values.get(i)));
         }
     }
 

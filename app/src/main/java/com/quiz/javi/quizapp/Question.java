@@ -13,10 +13,6 @@ public class Question {
     private int mLeftAdder;
     private int mRightAdder;
     private List<Answer> mAnswers;
-    private boolean mReviewed;
-    private int mAnswerSelected;
-    private int answerSelected;
-    private int number;
 
     public Question(
                 int questionNumber,
@@ -62,14 +58,6 @@ public class Question {
         }
 
         return answers;
-    }
-
-    public boolean getReviewed() {
-        return mReviewed;
-    }
-
-    public void setReviewed(boolean reviewed) {
-        mReviewed = reviewed;
     }
 
     public void setAnswerSelected(int answerSelected){

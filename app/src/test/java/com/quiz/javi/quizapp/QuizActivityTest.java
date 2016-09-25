@@ -15,6 +15,8 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import teamtreehouse.quizapp.QuestionBank;
@@ -62,6 +64,8 @@ public class QuizActivityTest {
         // Assert Layout displays the correct question answer options
         List<Integer> expectedAnswers = question.getAnswers();
         List<Integer> actualAnswers = getActualAnwsers(activity.mAnswersRadioGroup);
+        Collections.sort(expectedAnswers);
+        Collections.sort(actualAnswers);
 
         Assert.assertEquals(
                 expectedAnswers,
