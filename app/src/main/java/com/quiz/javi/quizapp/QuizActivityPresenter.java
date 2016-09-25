@@ -1,7 +1,5 @@
 package com.quiz.javi.quizapp;
 
-import android.widget.Button;
-
 /**
  * Created by Javi on 9/22/2016.
  */
@@ -14,11 +12,15 @@ public class QuizActivityPresenter {
         mView = view;
     }
 
-    public void updateQuestionTextView(String question) {
-        mView.setQuestionTextView(question);
+    public void updateQuestionText(String question) {
+        mView.updateQuestionTextView(question);
     }
 
     public void updateRadioButtonText(int index, String text){
-        mView.setRadioButtonText(index, text);
+        mView.updateRadioButtonTextView(index, text);
+    }
+
+    public void updateQuestionNumberText(String questionNumber) {
+        mView.updateQuestionNumberTextView(questionNumber);
     }
 }

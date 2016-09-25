@@ -22,7 +22,7 @@ public class QuestionTest {
     public void getText() throws Exception {
 
         // Arrange
-        question = createQuestion(3,4,7,6,8);
+        question = createQuestion(1,3,4,7,6,8);
 
         // Act
         String text = question.getText();
@@ -35,7 +35,7 @@ public class QuestionTest {
     public void setRightAnswerSelectedReturnsCorrect() throws Exception {
 
         // Arrange
-        Question question = createQuestion(2,3,5,4,6);
+        Question question = createQuestion(1,2,3,5,4,6);
 
         // Act
         question.setAnswerSelected(5);
@@ -48,7 +48,7 @@ public class QuestionTest {
     public void setWrongAnswerSelectedReturnsIncorrect() throws Exception {
 
         // Arrange
-        Question question = createQuestion(2,3,5,4,6);
+        Question question = createQuestion(1,2,3,5,4,6);
 
         // Act
         question.setAnswerSelected(4);
@@ -61,8 +61,9 @@ public class QuestionTest {
     public void getAnswerSelected() throws Exception {
 
         // Arrange
-        Question question = createQuestion(2,3,5,4,6);
+        Question question = createQuestion(1,2,3,5,4,6);
         int expected = 4;
+
         // Act
         question.setAnswerSelected(expected);
         int actual = question.getAnswerSelected();
@@ -80,7 +81,7 @@ public class QuestionTest {
         expectedAnswers.add(6);
         expectedAnswers.add(8);
 
-        question = createQuestion(3,4,7,6,8);
+        question = createQuestion(1,3,4,7,6,8);
 
         // Act
         List<Integer> actualAnswers = question.getAnswers();
@@ -93,7 +94,7 @@ public class QuestionTest {
     public void getReviewedReturnsFalseAtInitialization(){
 
         // Assert
-        question = createQuestion(1,2,3,4,5);
+        question = createQuestion(1,1,2,3,4,5);
 
         // Act
         boolean isReviewed = question.getReviewed();
@@ -106,7 +107,7 @@ public class QuestionTest {
     public void getReviewedReturnsTrueAfterSelectingAnswer(){
 
         // Assert
-        question = createQuestion(1,2,3,4,5);
+        question = createQuestion(1,1,2,3,4,5);
 
         // Act
         question.setAnswerSelected(4);
@@ -116,9 +117,23 @@ public class QuestionTest {
         assertTrue(question.getReviewed());
     }
 
-    private Question createQuestion(int leftAdder, int rightAdder, int correct, int incorrect1, int incorrect2){
+    @Test
+    public void getQuestionNumber(){
+
+        // Assert
+        question = createQuestion(1,1,2,3,4,5);
+
+        // Act
+        int expectedNumber = question.getNumber();
+
+        // Assert
+        Assert.assertEquals(1, expectedNumber);
+    }
+
+    private Question createQuestion(int questionNumber, int leftAdder, int rightAdder, int correct, int incorrect1, int incorrect2){
 
         return new Question(
+                questionNumber,
                 leftAdder,
                 rightAdder,
                 correct,

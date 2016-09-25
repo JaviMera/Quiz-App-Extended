@@ -29,6 +29,7 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
     TextView mQuestionTextView;
     RadioGroup mAnswersRadioGroup;
     AppCompatButton mSubmitButton;
+    TextView mQuestionNumberTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,8 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         });
 
         mQuestionTextView = getView(R.id.questionTextView);
+        mQuestionNumberTextView = getView(R.id.questionNumberTextView);
+
         mAnswersRadioGroup = getView(R.id.radioButtonGroup);
 
         for(int child = 0 ; child < mAnswersRadioGroup.getChildCount(); child++)
@@ -100,7 +103,6 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
                     return;
 
                 RadioButton rButton = mAnswerButtons.get(checkedId);
-                mCurrentQuestion = mQuiz.getQuestion();
                 int answerSelected = Integer.parseInt(rButton.getText().toString());
                 mCurrentQuestion .setAnswerSelected(answerSelected);
                 mCurrentQuestion .setReviewed(true);
@@ -109,26 +111,30 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
     }
 
     @Override
-    public void setQuestionTextView(String text) {
+    public void updateQuestionTextView(String text) {
         mQuestionTextView.setText(text);
     }
 
     @Override
-    public void setRadioButtonText(int index, String text) {
+    public void updateRadioButtonTextView(int index, String text) {
         RadioButton rButton = (RadioButton)mAnswersRadioGroup.getChildAt(index);
         rButton.setText(text);
     }
 
+    @Override
+    public void updateQuestionNumberTextView(String questionNumber) {
+        mQuestionNumberTextView.setText(questionNumber);
+    }
+
     private void setQuestion(Question question){
 
-        mPresenter.updateQuestionTextView(question.getText());
+        mPresenter.updateQuestionNumberText(String.format(Locale.ENGLISH, "%d )", question.getNumber()));
+        mPresenter.updateQuestionText(question.getText());
 
         Queue<Integer> values = new LinkedList<>(question.getAnswers());
         for(int i = 0 ; i < mAnswerButtons.size() ; i++)
         {
-            RadioButton rButton = mAnswerButtons.valueAt(i);
-
-            rButton.setText(String.format(Locale.ENGLISH,"%d", values.poll()));
+            mPresenter.updateRadioButtonText(i, String.format(Locale.ENGLISH,"%d", values.poll()));
         }
     }
 

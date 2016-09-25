@@ -8,6 +8,7 @@ import android.widget.Button;
 
 public interface QuizActivityView {
 
-    void setQuestionTextView(String text);
-    void setRadioButtonText(int index, String text);
+    void updateQuestionTextView(String text);
+    void updateRadioButtonTextView(int index, String text);
+    void updateQuestionNumberTextView(String questionNumber);
 }

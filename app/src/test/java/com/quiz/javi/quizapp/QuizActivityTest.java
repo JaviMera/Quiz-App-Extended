@@ -35,7 +35,7 @@ public class QuizActivityTest {
     }
 
     @Test
-    public void submitButtonClickDisplaysNextQuestion(){
+    public void activityCreationDisplaysFirstQuestionInformation(){
 
         // Arrange
         Quiz quiz = new Quiz(new QuestionBank());
@@ -45,11 +45,28 @@ public class QuizActivityTest {
         activity.mSubmitButton.performClick();
         Question question = quiz.getQuestion();
 
-        // Assert
-        Assert.assertEquals(activity.mQuestionTextView.getText().toString(), question.getText());
-        Assert.assertEquals(question.getAnswers(), getActualAnwsers(activity.mAnswersRadioGroup));
-    }
+        // Assert Layout displays the correct question
+        String expectedQuestion = activity.mQuestionTextView.getText().toString();
+        String actualQuestion = question.getText();
 
+        Assert.assertEquals(
+                expectedQuestion,
+                actualQuestion);
+
+        // Assert Layout displays the correct question number
+        String expectedQuestionNumber = activity.mQuestionNumberTextView.getText().toString();
+        String actualQuestionNumber = Integer.toString(question.getNumber());
+
+        Assert.assertTrue(expectedQuestionNumber.contains(actualQuestionNumber));
+
+        // Assert Layout displays the correct question answer options
+        List<Integer> expectedAnswers = question.getAnswers();
+        List<Integer> actualAnswers = getActualAnwsers(activity.mAnswersRadioGroup);
+
+        Assert.assertEquals(
+                expectedAnswers,
+                actualAnswers);
+    }
 
     private List<Integer> getActualAnwsers(RadioGroup group){
         List<Integer> actualAnswers = new ArrayList<>();

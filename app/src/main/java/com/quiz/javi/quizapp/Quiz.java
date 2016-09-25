@@ -25,11 +25,12 @@ public class Quiz {
         for(int index = 0 ; index < size ; index++)
         {
             mQuestions.add(new Question(
-               qBank.leftAdders[index],
-               qBank.rightAdders[index],
-               qBank.correctAnswers[index],
-               qBank.firstIncorrectAnswers[index],
-               qBank.secondIncorrectAnswers[index]
+                index + 1,
+                qBank.leftAdders[index],
+                qBank.rightAdders[index],
+                qBank.correctAnswers[index],
+                qBank.firstIncorrectAnswers[index],
+                qBank.secondIncorrectAnswers[index]
             ));
         }
     }

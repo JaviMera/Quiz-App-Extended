@@ -41,6 +41,7 @@ public class QuizTest {
 
         // Assert
         Assert.assertEquals(actualQuestion.getText(), question);
+        Assert.assertEquals(questionNumber+1, actualQuestion.getNumber());
     }
 
     @Test
@@ -57,18 +58,19 @@ public class QuizTest {
 
         // Act
         quiz = new Quiz(qBank);
-        Question actualQuestion = new Question(0,0,0,0,0);
+        Question actualQuestion = new Question(1,0,0,0,0,0);
         for(int i = 0 ; i <= questionNumber ; i++)
             actualQuestion = quiz.getQuestion();
 
         // Assert
         Assert.assertEquals(actualQuestion.getText(), question);
+        Assert.assertEquals(questionNumber+1, actualQuestion.getNumber());
     }
 
     @Test
     public void totalQuestionsReturnsRightAmountOfQuestions(){
 
-        // Assert
+        // Arrange
         QuestionBank qBank = new QuestionBank();
         int expectedLength = qBank.correctAnswers.length;
 
@@ -83,12 +85,12 @@ public class QuizTest {
     @Test
     public void quizReturnsFirstQuestionAfterReachingEnd() {
 
-        // Assert
+        // Arrange
         Quiz quiz = new Quiz(new QuestionBank());
         Question expectedQuestion = quiz.getQuestion();
 
         // Act
-        Question actualQuestion = new Question(0,0,0,0,0);
+        Question actualQuestion = new Question(1,0,0,0,0,0);
         for(int i = 0 ; i < 29 ; i++)
             actualQuestion = quiz.getQuestion();
 

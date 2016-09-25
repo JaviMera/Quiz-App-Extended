@@ -1,16 +1,11 @@
 package com.quiz.javi.quizapp;
 
-import android.widget.Button;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.cglib.transform.impl.AccessFieldTransformer;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Javi on 9/22/2016.
@@ -35,10 +30,10 @@ public class QuizActivityPresenterTest {
         String question = "All Harambe lives matter";
 
         // Act
-        presenter.updateQuestionTextView(question);
+        presenter.updateQuestionText(question);
 
         // Assert
-        Mockito.verify(view).setQuestionTextView(question);
+        Mockito.verify(view).updateQuestionTextView(question);
     }
 
     @Test
@@ -52,6 +47,19 @@ public class QuizActivityPresenterTest {
         presenter.updateRadioButtonText(index, answerText);
 
         // Assert
-        Mockito.verify(view).setRadioButtonText(index, answerText);
+        Mockito.verify(view).updateRadioButtonTextView(index, answerText);
+    }
+
+    @Test
+    public void updateQuestionNumberText(){
+
+        // Arrange
+        String questionNumber = "1";
+
+        // Act
+        presenter.updateQuestionNumberText(questionNumber);
+
+        // Assert
+        Mockito.verify(view).updateQuestionNumberTextView(questionNumber);
     }
 }

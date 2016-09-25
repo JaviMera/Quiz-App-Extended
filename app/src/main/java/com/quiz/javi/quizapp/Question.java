@@ -9,19 +9,24 @@ import java.util.List;
 
 public class Question {
 
+    private int mNumber;
     private int mLeftAdder;
     private int mRightAdder;
     private List<Answer> mAnswers;
     private boolean mReviewed;
     private int mAnswerSelected;
     private int answerSelected;
+    private int number;
 
-    public Question(int leftAdder,
-                    int rightAdder,
-                    int correctAnswer,
-                    int incorrectAnswer1,
-                    int incorrectAnswer2)
+    public Question(
+                int questionNumber,
+                int leftAdder,
+                int rightAdder,
+                int correctAnswer,
+                int incorrectAnswer1,
+                int incorrectAnswer2)
     {
+        mNumber = questionNumber;
         mLeftAdder = leftAdder;
         mRightAdder = rightAdder;
         mAnswers = new ArrayList();
@@ -93,5 +98,9 @@ public class Question {
         }
 
         return -1;
+    }
+
+    public int getNumber() {
+        return mNumber;
     }
 }
