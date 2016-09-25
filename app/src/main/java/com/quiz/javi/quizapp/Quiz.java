@@ -12,8 +12,11 @@ import teamtreehouse.quizapp.QuestionBank;
 public class Quiz {
 
     private List<Question> mQuestions;
+    private int mCurrent;
 
     public Quiz(QuestionBank qBank){
+
+        mCurrent = 0;
         mQuestions = new ArrayList<>();
 
         // Get the length of only one of the arrays, as all of them have the same number of elements
@@ -31,8 +34,11 @@ public class Quiz {
         }
     }
 
-    public Question getQuestion(int questionNumber) {
-        return mQuestions.get(questionNumber % totalQuestions());
+    public Question getQuestion() {
+        Question question = mQuestions.get(mCurrent % totalQuestions());
+        mCurrent++;
+
+        return question;
     }
 
     public int totalQuestions() {

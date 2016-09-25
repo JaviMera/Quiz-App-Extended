@@ -1,7 +1,9 @@
 package com.quiz.javi.quizapp;
 
 import android.os.Build;
+import android.provider.MediaStore;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import junit.framework.Assert;
 
@@ -14,7 +16,6 @@ import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import teamtreehouse.quizapp.QuestionBank;
 
@@ -26,7 +27,7 @@ import teamtreehouse.quizapp.QuestionBank;
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP)
 public class QuizActivityTest {
 
-    QuizActivity activity;
+    private QuizActivity activity;
 
     @Before
     public void SetUp(){
@@ -34,53 +35,30 @@ public class QuizActivityTest {
     }
 
     @Test
-    public void nextButtonClickShowsNextQuestion(){
+    public void submitButtonClickDisplaysNextQuestion(){
 
         // Arrange
         Quiz quiz = new Quiz(new QuestionBank());
-        Question question = quiz.getQuestion(1);
+        quiz.getQuestion(); // display first question
 
         // Act
-        activity.mNextQuestionButton.performClick();
+        activity.mSubmitButton.performClick();
+        Question question = quiz.getQuestion();
 
-        // Arrange
-        Assert.assertEquals(question.getText(), activity.mQuestionTextView.getText().toString());
+        // Assert
+        Assert.assertEquals(activity.mQuestionTextView.getText().toString(), question.getText());
+        Assert.assertEquals(question.getAnswers(), getActualAnwsers(activity.mAnswersRadioGroup));
+    }
 
+
+    private List<Integer> getActualAnwsers(RadioGroup group){
         List<Integer> actualAnswers = new ArrayList<>();
-        actualAnswers.add(Integer.parseInt(((RadioButton)activity.mAnswersRadioGroup.getChildAt(0)).getText().toString()));
-        actualAnswers.add(Integer.parseInt(((RadioButton)activity.mAnswersRadioGroup.getChildAt(1)).getText().toString()));
-        actualAnswers.add(Integer.parseInt(((RadioButton)activity.mAnswersRadioGroup.getChildAt(2)).getText().toString()));
+        for(int i = 0 ; i < group.getChildCount(); i ++)
+        {
+            RadioButton rButton = (RadioButton)group.getChildAt(i);
+            actualAnswers.add(Integer.parseInt(rButton.getText().toString()));
+        }
 
-        Assert.assertEquals(question.getAnswers(), actualAnswers);
-    }
-
-    @Test
-    public void questionNotReviewedHasNoButtonsChecked() throws Exception {
-
-        // Arrange
-        RadioButton rButton = (RadioButton)activity.mAnswersRadioGroup.getChildAt(0);
-        rButton.performClick();
-
-        // Act
-        activity.mNextQuestionButton.performClick();
-
-        // Assert
-        Assert.assertFalse(rButton.isChecked());
-    }
-
-    @Test
-    public void questionReviewedHasSelectedAnswerChecked() throws Exception {
-
-        // Arrange
-        RadioButton rButton = (RadioButton)activity.mAnswersRadioGroup.getChildAt(0);
-        rButton.performClick();
-
-        // Act
-        // Loop 29 times (0-28) to get back to the first question ,and see if it is checked
-        for(int i = 0 ; i < 29 ; i++)
-            activity.mNextQuestionButton.performClick();
-
-        // Assert
-        Assert.assertTrue(rButton.isChecked());
+        return actualAnswers;
     }
 }

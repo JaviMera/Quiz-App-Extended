@@ -2,4 +2,6 @@
     <string name="app_name">Quiz App</string>
     <string name="next_question">Go to Next Question</string>
     <string name="submit_button">Submit</string>
+    <string name="attempted_questions">Attempted Questions:</string>
+    <string name="correct_answers">Correct Answers:</string>
 </resources>
