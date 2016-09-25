@@ -46,8 +46,11 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
             @Override
             public void onClick(View v) {
 
-                String toastMessage = getResultMessage(mCurrentQuestion );
-                displayResult(v.getContext(), toastMessage);
+                if(mAnswersRadioGroup.getCheckedRadioButtonId() != -1)
+                {
+                    String toastMessage = getResultMessage(mCurrentQuestion );
+                    displayResult(v.getContext(), toastMessage);
+                }
 
                 // Use this flag to not call the Toast message code, inside of CheckedChange, when the Next button is pressed
                 mNextQuestionButtonClicked = true;
