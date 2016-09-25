@@ -23,4 +23,12 @@ public class QuizActivityPresenter {
     public void updateQuestionNumberText(String questionNumber) {
         mView.updateQuestionNumberTextView(questionNumber);
     }
+
+    public void updateCorrectAnswersText(int correctNumber) {
+        mView.updateCorrectAnswersTextView(correctNumber);
+    }
+
+    public void updateAttempsText(int attemptsNumber) {
+        mView.updateAttempsTextView(attemptsNumber);
+    }
 }

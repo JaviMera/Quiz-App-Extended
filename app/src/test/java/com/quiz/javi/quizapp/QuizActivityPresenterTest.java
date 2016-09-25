@@ -62,4 +62,30 @@ public class QuizActivityPresenterTest {
         // Assert
         Mockito.verify(view).updateQuestionNumberTextView(questionNumber);
     }
+
+    @Test
+    public void updateCorrectAnswerText() throws Exception {
+
+        // Arrange
+        int correctNumber = 0;
+
+        // Act
+        presenter.updateCorrectAnswersText(correctNumber);
+
+        // Assert
+        Mockito.verify(view).updateCorrectAnswersTextView(correctNumber);
+    }
+
+    @Test
+    public void updateAttempsText() throws Exception {
+
+        // Arrange
+        int attemptsNumber = 0;
+
+        // Act
+        presenter.updateAttempsText(attemptsNumber);
+
+        // Assert
+        Mockito.verify(view).updateAttempsTextView(attemptsNumber);
+    }
 }

@@ -21,6 +21,7 @@ import teamtreehouse.quizapp.QuestionBank;
 public class QuizActivity extends AppCompatActivity implements QuizActivityView{
 
     private boolean mNextQuestionButtonClicked;
+    private int mAttempsNumber;
     private Question mCurrentQuestion;
 
     private QuizActivityPresenter mPresenter;
@@ -31,6 +32,8 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
     RadioGroup mAnswersRadioGroup;
     AppCompatButton mSubmitButton;
     TextView mQuestionNumberTextView;
+    TextView mCorrectAnswersTextView;
+    TextView mAttemptsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +50,22 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
             @Override
             public void onClick(View v) {
 
+                if(mAttempsNumber < mQuiz.totalQuestions())
+                {
+                    mAttempsNumber++;
+                    mPresenter.updateAttempsText(mAttempsNumber);
+                }
+
+                if(mCurrentQuestion.isCorrect())
+                {
+                    int currentCorrectAnswers = Integer.parseInt(mCorrectAnswersTextView.getText().toString());
+                    currentCorrectAnswers++;
+                    mPresenter.updateCorrectAnswersText(currentCorrectAnswers);
+                }
+
                 if(mCurrentQuestion.getAnswerSelected() != -1)
                 {
-                    String toastMessage = getResultMessage(mCurrentQuestion);
+                    String toastMessage = getResult(mCurrentQuestion);
                     displayResult(v.getContext(), toastMessage);
                 }
 
@@ -62,7 +78,7 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
 
                 if(mCurrentQuestion.getAnswerSelected() != -1)
                 {
-                    for (int child = 0; child < mAnswersRadioGroup.getChildCount(); child++) {
+                    for(int child = 0; child < mAnswersRadioGroup.getChildCount(); child++) {
                         RadioButton rButton = (RadioButton) mAnswersRadioGroup.getChildAt(child);
                         int rButtonAnswer = Integer.parseInt(rButton.getText().toString());
 
@@ -76,10 +92,20 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
             }
         });
 
-        mQuestionTextView = getView(R.id.questionTextView);
         mQuestionNumberTextView = getView(R.id.questionNumberTextView);
 
         mAnswersRadioGroup = getView(R.id.radioButtonGroup);
+        mAnswersRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                if(mAnswersRadioGroup.getCheckedRadioButtonId() != -1){
+                    RadioButton rButton = mAnswerButtons.get(mAnswersRadioGroup.getCheckedRadioButtonId());
+                    int answerSelected = Integer.parseInt(rButton.getText().toString());
+                    mCurrentQuestion.setAnswerSelected(answerSelected);
+                }
+            }
+        });
 
         for(int child = 0 ; child < mAnswersRadioGroup.getChildCount(); child++)
         {
@@ -87,30 +113,16 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
             mAnswerButtons.append(rButton.getId(), rButton);
         }
 
-        mAnswersRadioGroup.setOnCheckedChangeListener(checkedListener());
+        mCorrectAnswersTextView = getView(R.id.correctAnswersTextView);
+        mPresenter.updateCorrectAnswersText(0);
 
+        mAttemptsTextView = getView(R.id.attempsTextView);
+        mAttempsNumber = 0;
+        mPresenter.updateAttempsText(mAttempsNumber);
+
+        mQuestionTextView = getView(R.id.questionTextView);
         mCurrentQuestion = mQuiz.getQuestion();
         setQuestion(mCurrentQuestion);
-    }
-
-    private RadioGroup.OnCheckedChangeListener checkedListener() {
-        return new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-                // Avoid calling the Toast code, if this Listener has been fired by calling radioGroup.clearCheck();
-                if(group.getCheckedRadioButtonId() == -1)
-                    return;
-
-                // Avoid calling the Toast code, if this Listener has been fired by pressing the Next Button
-                if(mNextQuestionButtonClicked)
-                    return;
-
-                RadioButton rButton = mAnswerButtons.get(checkedId);
-                int answerSelected = Integer.parseInt(rButton.getText().toString());
-                mCurrentQuestion .setAnswerSelected(answerSelected);
-            }
-        };
     }
 
     @Override
@@ -127,6 +139,16 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
     @Override
     public void updateQuestionNumberTextView(String questionNumber) {
         mQuestionNumberTextView.setText(questionNumber);
+    }
+
+    @Override
+    public void updateCorrectAnswersTextView(int correctNumber) {
+        mCorrectAnswersTextView.setText(String.format(Locale.ENGLISH, "%d", correctNumber));
+    }
+
+    @Override
+    public void updateAttempsTextView(int attemptsNumber) {
+        mAttemptsTextView.setText(String.format(Locale.ENGLISH, "%d", attemptsNumber));
     }
 
     private void setQuestion(Question question){
@@ -146,7 +168,7 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         return (T) findViewById(id);
     }
 
-    private String getResultMessage(Question question){
+    private String getResult(Question question){
 
         if(question.isCorrect())
         {
