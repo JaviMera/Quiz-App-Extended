@@ -1,6 +1,7 @@
 package com.quiz.javi.quizapp;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
@@ -27,6 +28,8 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
     private QuizActivityPresenter mPresenter;
     private Quiz mQuiz;
     private SparseArray<RadioButton> mAnswerButtons;
+    private MediaPlayer mSuccessSound;
+    private MediaPlayer mFailureSound;
 
     TextView mQuestionTextView;
     RadioGroup mAnswersRadioGroup;
@@ -39,6 +42,9 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+
+        mSuccessSound = MediaPlayer.create(this, R.raw.job_done);
+        mFailureSound = MediaPlayer.create(this, R.raw.brute_force);
 
         mAnswerButtons = new SparseArray<>();
         QuestionBank qBank = new QuestionBank();
@@ -56,17 +62,22 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
                     mPresenter.updateAttempsText(mAttempsNumber);
                 }
 
-                if(mCurrentQuestion.isCorrect())
-                {
-                    int currentCorrectAnswers = Integer.parseInt(mCorrectAnswersTextView.getText().toString());
-                    currentCorrectAnswers++;
-                    mPresenter.updateCorrectAnswersText(currentCorrectAnswers);
-                }
-
                 if(mCurrentQuestion.getAnswerSelected() != -1)
                 {
                     String toastMessage = getResult(mCurrentQuestion);
                     displayResult(v.getContext(), toastMessage);
+
+                    if(mCurrentQuestion.isCorrect())
+                    {
+                        int currentCorrectAnswers = Integer.parseInt(mCorrectAnswersTextView.getText().toString());
+                        currentCorrectAnswers++;
+                        mPresenter.updateCorrectAnswersText(currentCorrectAnswers);
+                        mSuccessSound.start();
+                    }
+                    else
+                    {
+                        mFailureSound.start();
+                    }
                 }
 
                 // Use this flag to not call the Toast message code, inside of CheckedChange, when the Next button is pressed
