@@ -88,4 +88,17 @@ public class QuizActivityPresenterTest {
         // Assert
         Mockito.verify(view).updateAttempsTextView(attemptsNumber);
     }
+
+    @Test
+    public void selectButtonOnSelectedAnswer(){
+
+        // Arrange
+        int answer = 7;
+
+        // Act
+        presenter.selectButtonOnSelectedAnswer(answer);
+
+        // Assert
+        Mockito.verify(view).selectButtonOnAnsweredQuestion(answer);
+    }
 }

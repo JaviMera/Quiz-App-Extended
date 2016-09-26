@@ -13,4 +13,5 @@ public interface QuizActivityView {
     void updateQuestionNumberTextView(String questionNumber);
     void updateCorrectAnswersTextView(int correctNumber);
     void updateAttempsTextView(int attemptsNumber);
+    void selectButtonOnAnsweredQuestion(int selectedAnswer);
 }

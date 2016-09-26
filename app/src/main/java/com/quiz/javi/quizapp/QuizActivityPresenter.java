@@ -31,4 +31,8 @@ public class QuizActivityPresenter {
     public void updateAttempsText(int attemptsNumber) {
         mView.updateAttempsTextView(attemptsNumber);
     }
+
+    public void selectButtonOnSelectedAnswer(int answer) {
+        mView.selectButtonOnAnsweredQuestion(answer);
+    }
 }

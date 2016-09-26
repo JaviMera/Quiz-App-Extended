@@ -56,50 +56,48 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
             @Override
             public void onClick(View v) {
 
-                if(mAttempsNumber < mQuiz.totalQuestions())
-                {
-                    mAttempsNumber++;
-                    mPresenter.updateAttempsText(mAttempsNumber);
-                }
+            if(mAttempsNumber < mQuiz.totalQuestions())
+            {
+                mAttempsNumber++;
+                mPresenter.updateAttempsText(mAttempsNumber);
+            }
 
-                if(mCurrentQuestion.getAnswerSelected() != -1)
-                {
-                    String toastMessage = getResult(mCurrentQuestion);
-                    displayResult(v.getContext(), toastMessage);
+            if(mCurrentQuestion.getAnswerSelected() != -1)
+            {
+                String toastMessage = getResult(mCurrentQuestion);
+                displayResult(v.getContext(), toastMessage);
 
-                    if(mCurrentQuestion.isCorrect())
-                    {
-                        int currentCorrectAnswers = Integer.parseInt(mCorrectAnswersTextView.getText().toString());
-                        currentCorrectAnswers++;
-                        mPresenter.updateCorrectAnswersText(currentCorrectAnswers);
+                if(mCurrentQuestion.isCorrect())
+                {
+                    int currentCorrectAnswers = Integer.parseInt(mCorrectAnswersTextView.getText().toString());
+                    currentCorrectAnswers++;
+                    mPresenter.updateCorrectAnswersText(currentCorrectAnswers);
+
+                    // Add null check, otherwise Robolectric will not see this as initialized when running a Test
+                    if(mSuccessSound != null)
                         mSuccessSound.start();
-                    }
-                    else
-                    {
-                        mFailureSound.start();
-                    }
                 }
-
-                // Use this flag to not call the Toast message code, inside of CheckedChange, when the Next button is pressed
-                mNextQuestionButtonClicked = true;
-
-                mAnswersRadioGroup.clearCheck();
-                mCurrentQuestion = mQuiz.getQuestion();
-                setQuestion(mCurrentQuestion);
-
-                if(mCurrentQuestion.getAnswerSelected() != -1)
+                else
                 {
-                    for(int child = 0; child < mAnswersRadioGroup.getChildCount(); child++) {
-                        RadioButton rButton = (RadioButton) mAnswersRadioGroup.getChildAt(child);
-                        int rButtonAnswer = Integer.parseInt(rButton.getText().toString());
-
-                        if(mCurrentQuestion.getAnswerSelected() == rButtonAnswer){
-                            mAnswerButtons.get(rButton.getId()).setChecked(true);
-                        }
-                    }
+                    // Add null check, otherwise Robolectric will not see this as initialized when running a Test
+                    if(mFailureSound != null)
+                        mFailureSound.start();
                 }
+            }
 
-                mNextQuestionButtonClicked = false;
+            // Use this flag to not call the Toast message code, inside of CheckedChange, when the Next button is pressed
+            mNextQuestionButtonClicked = true;
+
+            mAnswersRadioGroup.clearCheck();
+            mCurrentQuestion = mQuiz.getQuestion();
+            setQuestion(mCurrentQuestion);
+
+            if(mCurrentQuestion.getAnswerSelected() != -1)
+            {
+                mPresenter.selectButtonOnSelectedAnswer(mCurrentQuestion.getAnswerSelected());
+            }
+
+            mNextQuestionButtonClicked = false;
             }
         });
 
@@ -160,6 +158,18 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
     @Override
     public void updateAttempsTextView(int attemptsNumber) {
         mAttemptsTextView.setText(String.format(Locale.ENGLISH, "%d", attemptsNumber));
+    }
+
+    @Override
+    public void selectButtonOnAnsweredQuestion(int selectedAnswer) {
+        for (int child = 0; child < mAnswersRadioGroup.getChildCount(); child++) {
+            RadioButton rButton = (RadioButton) mAnswersRadioGroup.getChildAt(child);
+            int rButtonAnswer = Integer.parseInt(rButton.getText().toString());
+
+            if (selectedAnswer == rButtonAnswer) {
+                mAnswerButtons.get(rButton.getId()).setChecked(true);
+            }
+        }
     }
 
     private void setQuestion(Question question){
