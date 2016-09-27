@@ -51,19 +51,6 @@ public class QuizActivityPresenterTest {
     }
 
     @Test
-    public void updateQuestionNumberText(){
-
-        // Arrange
-        String questionNumber = "1";
-
-        // Act
-        presenter.updateQuestionNumberText(questionNumber);
-
-        // Assert
-        Mockito.verify(view).updateQuestionNumberTextView(questionNumber);
-    }
-
-    @Test
     public void updateCorrectAnswerText() throws Exception {
 
         // Arrange

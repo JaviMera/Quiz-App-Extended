@@ -20,10 +20,6 @@ public class QuizActivityPresenter {
         mView.updateRadioButtonTextView(index, text);
     }
 
-    public void updateQuestionNumberText(String questionNumber) {
-        mView.updateQuestionNumberTextView(questionNumber);
-    }
-
     public void updateCorrectAnswersText(int correctNumber) {
         mView.updateCorrectAnswersTextView(correctNumber);
     }

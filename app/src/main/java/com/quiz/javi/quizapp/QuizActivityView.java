@@ -10,7 +10,6 @@ public interface QuizActivityView {
 
     void updateQuestionTextView(String text);
     void updateRadioButtonTextView(int index, String text);
-    void updateQuestionNumberTextView(String questionNumber);
     void updateCorrectAnswersTextView(int correctNumber);
     void updateAttempsTextView(int attemptsNumber);
     void selectButtonOnAnsweredQuestion(int selectedAnswer);

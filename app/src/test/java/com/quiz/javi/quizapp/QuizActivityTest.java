@@ -41,26 +41,20 @@ public class QuizActivityTest {
 
         // Arrange
         String answerChoicesRegex = "-?\\d+";
-        String questionNumberRegex = "\\d+ \\)";
         String questionTextRegex = "[\\w ]+[\\d]+ \\+ \\(?-?[\\d]+\\)??\\?";
         String questionText = activity.mQuestionTextView.getText().toString();
-        String questionNumberText = activity.mQuestionNumberTextView.getText().toString();
         String rButton1Text = ((RadioButton)activity.mAnswersRadioGroup.getChildAt(0)).getText().toString();
         String rButton2Text = ((RadioButton)activity.mAnswersRadioGroup.getChildAt(1)).getText().toString();
         String rButton3Text = ((RadioButton)activity.mAnswersRadioGroup.getChildAt(2)).getText().toString();
 
         // Act
         boolean matchesQuestion = questionText.matches(questionTextRegex);
-        boolean matchesQuestionNumber = questionNumberText.matches(questionNumberRegex);
         boolean matchesAnswer2 = rButton2Text.matches(answerChoicesRegex);
         boolean matchesAnswer1 = rButton1Text.matches(answerChoicesRegex);
         boolean matchesAnswer3 = rButton3Text.matches(answerChoicesRegex);
 
         // Assert question displays correct text format
         Assert.assertTrue(matchesQuestion);
-
-        // Assert Layout displays the correct question number
-        Assert.assertTrue(matchesQuestionNumber);
 
         // Assert score text views
         Assert.assertTrue(activity.mCorrectAnswersTextView.getText().toString().contains("0"));
@@ -79,7 +73,6 @@ public class QuizActivityTest {
         activity.mSubmitButton.performClick();
 
         // Assert that activity still shows question #1
-        Assert.assertTrue(activity.mQuestionNumberTextView.getText().toString().contains("1"));
         Assert.assertTrue(activity.mCorrectAnswersTextView.getText().toString().contains("0"));
         Assert.assertTrue(activity.mAttemptsTextView.getText().toString().contains("0"));
     }

@@ -1,6 +1,7 @@
 package com.quiz.javi.quizapp;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import java.util.Locale;
 
 public class QuizActivity extends AppCompatActivity implements QuizActivityView{
 
+    private final Typeface OSWALD_REGULAR = Typeface.createFromAsset(getAssets(), "fonts/Oswald-Regular.ttf");
+
     private int mCorrectAnswers;
     private Question mCurrentQuestion;
     private SoundPlayer mSoundPlayer;
@@ -29,7 +32,6 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
     public TextView mQuestionTextView;
     public RadioGroup mAnswersRadioGroup;
     public AppCompatButton mSubmitButton;
-    public TextView mQuestionNumberTextView;
     public TextView mCorrectAnswersTextView;
     public TextView mAttemptsTextView;
 
@@ -38,12 +40,13 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+        mAnswerButtons = new SparseArray<>();
         mSoundPlayer = new SoundPlayer(
                 MediaPlayer.create(this, R.raw.job_done),
                 MediaPlayer.create(this, R.raw.brute_force)
         );
 
-        mAnswerButtons = new SparseArray<>();
+
         mQuiz = new Quiz(-100, 100);
         mPresenter = new QuizActivityPresenter(this);
 
@@ -81,25 +84,27 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
             }
         });
 
-        mQuestionNumberTextView = getView(R.id.questionNumberTextView);
-
         mAnswersRadioGroup = getView(R.id.radioButtonGroup);
 
         for(int child = 0 ; child < mAnswersRadioGroup.getChildCount(); child++)
         {
             RadioButton rButton = (RadioButton)mAnswersRadioGroup.getChildAt(child);
+            rButton.setTypeface(OSWALD_REGULAR);
             mAnswerButtons.append(rButton.getId(), rButton);
         }
 
         mCorrectAnswersTextView = getView(R.id.correctAnswersTextView);
+        mCorrectAnswersTextView.setTypeface(OSWALD_REGULAR);
         mCorrectAnswers = 0;
         mPresenter.updateCorrectAnswersText(mCorrectAnswers);
 
         mAttemptsTextView = getView(R.id.attempsTextView);
+        mAttemptsTextView.setTypeface(OSWALD_REGULAR);
         int attempts = 0;
         mPresenter.updateAttempsText(attempts);
 
         mQuestionTextView = getView(R.id.questionTextView);
+        mQuestionTextView.setTypeface(OSWALD_REGULAR);
         mCurrentQuestion = mQuiz.generateQuestion();
         setQuestion(mCurrentQuestion);
     }
@@ -123,18 +128,13 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
     }
 
     @Override
-    public void updateQuestionNumberTextView(String questionNumber) {
-        mQuestionNumberTextView.setText(questionNumber);
-    }
-
-    @Override
     public void updateCorrectAnswersTextView(int correctNumber) {
-        mCorrectAnswersTextView.setText(String.format(Locale.ENGLISH, "%d", correctNumber));
+        mCorrectAnswersTextView.setText(String.format(Locale.ENGLISH, "Correct: %d", correctNumber));
     }
 
     @Override
     public void updateAttempsTextView(int attemptsNumber) {
-        mAttemptsTextView.setText(String.format(Locale.ENGLISH, "%d", attemptsNumber));
+        mAttemptsTextView.setText(String.format(Locale.ENGLISH, "Attempts: %d", attemptsNumber));
     }
 
     @Override
@@ -151,7 +151,6 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
 
     private void setQuestion(Question question){
 
-        mPresenter.updateQuestionNumberText(String.format(Locale.ENGLISH, "%d )", question.getNumber()));
         mPresenter.updateQuestionText(question.getText());
 
         List<Integer> values = new ArrayList<>(question.getAnswers());
