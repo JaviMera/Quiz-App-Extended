@@ -19,115 +19,48 @@ public class QuestionTest {
     private Question question;
 
     @Test
-    public void getText() throws Exception {
+    public void questionInit() throws Exception {
 
         // Arrange
         question = createQuestion(1,3,4,7,6,8);
 
         // Act
-        String text = question.getText();
+        String actualText = question.getText();
+        int actualNumber = question.getNumber();
+        int actualSize = question.getAnswers().size();
 
         // Assert
-        Assert.assertEquals("What is 3 + 4?", text);
+        assertTrue(actualText.matches("[\\w ]+[\\d]+ \\+ \\(?-?[\\d]+\\)??\\?"));
+        Assert.assertEquals(1, actualNumber);
+        Assert.assertEquals(3, actualSize);
     }
 
     @Test
-    public void setRightAnswerSelectedReturnsCorrect() throws Exception {
+    public void isCorrectReturnsTrueOnCorrectSelection(){
 
         // Arrange
-        Question question = createQuestion(1,2,3,5,4,6);
-
-        // Act
-        question.setAnswerSelected(5);
-
-        // Assert
-        Assert.assertTrue(question.isCorrect());
-    }
-
-    @Test
-    public void setWrongAnswerSelectedReturnsIncorrect() throws Exception {
-
-        // Arrange
-        Question question = createQuestion(1,2,3,5,4,6);
-
-        // Act
-        question.setAnswerSelected(4);
-
-        // Assert
-        Assert.assertFalse(question.isCorrect());
-    }
-
-    @Test
-    public void getAnswerSelected() throws Exception {
-
-        // Arrange
-        Question question = createQuestion(1,2,3,5,4,6);
-        int expected = 4;
-
-        // Act
-        question.setAnswerSelected(expected);
-        int actual = question.getAnswerSelected();
-
-        // Assert
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    public void getAnswersReturnsMatchingAnswersToQuestion(){
-
-        // Assert
-        List<Integer> expectedAnswers = new ArrayList<>();
-        expectedAnswers.add(7);
-        expectedAnswers.add(6);
-        expectedAnswers.add(8);
-
         question = createQuestion(1,3,4,7,6,8);
+        int correctAnswer = question.getAnswers().get(0);
 
         // Act
-        List<Integer> actualAnswers = question.getAnswers();
+        boolean result = question.isCorrect(correctAnswer);
 
         // Assert
-        assertEquals(expectedAnswers, actualAnswers);
+        assertTrue(result);
     }
 
     @Test
-    public void getSelectedAnswerReturnsNegativeAtInit(){
+    public void isCorrectReturnsFalseOnIncorrectSelection(){
 
-        // Assert
-        question = createQuestion(1,1,2,3,4,5);
-
-        // Act
-        int answer = question.getAnswerSelected();
-
-        // Assert
-        Assert.assertEquals(-1, answer);
-    }
-
-    @Test
-    public void getAnswerSelectedChoiceSelected(){
-
-        // Assert
-        question = createQuestion(1,1,2,3,4,5);
+        // Arrange
+        question = createQuestion(1,3,4,7,6,8);
+        int correctAnswer = question.getAnswers().get(1);
 
         // Act
-        question.setAnswerSelected(4);
+        boolean result = question.isCorrect(correctAnswer);
 
         // Assert
-        int answer = question.getAnswerSelected();
-        Assert.assertEquals(4, answer);
-    }
-
-    @Test
-    public void getQuestionNumber(){
-
-        // Assert
-        question = createQuestion(1,1,2,3,4,5);
-
-        // Act
-        int expectedNumber = question.getNumber();
-
-        // Assert
-        Assert.assertEquals(1, expectedNumber);
+        Assert.assertFalse(result);
     }
 
     private Question createQuestion(int questionNumber, int leftAdder, int rightAdder, int correct, int incorrect1, int incorrect2){

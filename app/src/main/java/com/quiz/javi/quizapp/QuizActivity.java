@@ -17,38 +17,34 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import teamtreehouse.quizapp.QuestionBank;
-
 public class QuizActivity extends AppCompatActivity implements QuizActivityView{
 
-    private boolean mNextQuestionButtonClicked;
-    private int mAttempsNumber;
+    private int mCorrectAnswers;
     private Question mCurrentQuestion;
-
+    private SoundPlayer mSoundPlayer;
     private QuizActivityPresenter mPresenter;
     private Quiz mQuiz;
     private SparseArray<RadioButton> mAnswerButtons;
-    private MediaPlayer mSuccessSound;
-    private MediaPlayer mFailureSound;
 
-    TextView mQuestionTextView;
-    RadioGroup mAnswersRadioGroup;
-    AppCompatButton mSubmitButton;
-    TextView mQuestionNumberTextView;
-    TextView mCorrectAnswersTextView;
-    TextView mAttemptsTextView;
+    public TextView mQuestionTextView;
+    public RadioGroup mAnswersRadioGroup;
+    public AppCompatButton mSubmitButton;
+    public TextView mQuestionNumberTextView;
+    public TextView mCorrectAnswersTextView;
+    public TextView mAttemptsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        mSuccessSound = MediaPlayer.create(this, R.raw.job_done);
-        mFailureSound = MediaPlayer.create(this, R.raw.brute_force);
+        mSoundPlayer = new SoundPlayer(
+                MediaPlayer.create(this, R.raw.job_done),
+                MediaPlayer.create(this, R.raw.brute_force)
+        );
 
         mAnswerButtons = new SparseArray<>();
-        QuestionBank qBank = new QuestionBank();
-        mQuiz = new Quiz(qBank);
+        mQuiz = new Quiz(-100, 100);
         mPresenter = new QuizActivityPresenter(this);
 
         mSubmitButton = getView(R.id.submitButton);
@@ -56,65 +52,38 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
             @Override
             public void onClick(View v) {
 
-            if(mAttempsNumber < mQuiz.totalQuestions())
-            {
-                mAttempsNumber++;
-                mPresenter.updateAttempsText(mAttempsNumber);
-            }
+                if(mAnswersRadioGroup.getCheckedRadioButtonId() != -1) {
 
-            if(mCurrentQuestion.getAnswerSelected() != -1)
-            {
-                String toastMessage = getResult(mCurrentQuestion);
-                displayResult(v.getContext(), toastMessage);
+                    int attempts = mCurrentQuestion.getNumber();
+                    mPresenter.updateAttempsText(attempts);
 
-                if(mCurrentQuestion.isCorrect())
-                {
-                    int currentCorrectAnswers = Integer.parseInt(mCorrectAnswersTextView.getText().toString());
-                    currentCorrectAnswers++;
-                    mPresenter.updateCorrectAnswersText(currentCorrectAnswers);
+                    RadioButton rButton = mAnswerButtons.get(mAnswersRadioGroup.getCheckedRadioButtonId());
+                    int answerSelected = Integer.parseInt(rButton.getText().toString());
+                    boolean result = mCurrentQuestion.isCorrect(answerSelected);
 
-                    // Add null check, otherwise Robolectric will not see this as initialized when running a Test
-                    if(mSuccessSound != null)
-                        mSuccessSound.start();
+                    mCorrectAnswers += result ? 1 : 0;
+                    mPresenter.updateCorrectAnswersText(mCorrectAnswers);
+
+                    String message = mCurrentQuestion.getAnswerMessage(result);
+                    displayResult(v.getContext(), message);
+
+                    mSoundPlayer.play(result);
+
+                    mAnswersRadioGroup.clearCheck();
+                    mCurrentQuestion = mQuiz.generateQuestion();
+                    setQuestion(mCurrentQuestion);
                 }
-                else
-                {
-                    // Add null check, otherwise Robolectric will not see this as initialized when running a Test
-                    if(mFailureSound != null)
-                        mFailureSound.start();
+                else{
+
+                    String noSelectionMessage = mCurrentQuestion.getErrorMessage();
+                    displayResult(v.getContext(), noSelectionMessage);
                 }
-            }
-
-            // Use this flag to not call the Toast message code, inside of CheckedChange, when the Next button is pressed
-            mNextQuestionButtonClicked = true;
-
-            mAnswersRadioGroup.clearCheck();
-            mCurrentQuestion = mQuiz.getQuestion();
-            setQuestion(mCurrentQuestion);
-
-            if(mCurrentQuestion.getAnswerSelected() != -1)
-            {
-                mPresenter.selectButtonOnSelectedAnswer(mCurrentQuestion.getAnswerSelected());
-            }
-
-            mNextQuestionButtonClicked = false;
             }
         });
 
         mQuestionNumberTextView = getView(R.id.questionNumberTextView);
 
         mAnswersRadioGroup = getView(R.id.radioButtonGroup);
-        mAnswersRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-                if(mAnswersRadioGroup.getCheckedRadioButtonId() != -1){
-                    RadioButton rButton = mAnswerButtons.get(mAnswersRadioGroup.getCheckedRadioButtonId());
-                    int answerSelected = Integer.parseInt(rButton.getText().toString());
-                    mCurrentQuestion.setAnswerSelected(answerSelected);
-                }
-            }
-        });
 
         for(int child = 0 ; child < mAnswersRadioGroup.getChildCount(); child++)
         {
@@ -123,15 +92,23 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         }
 
         mCorrectAnswersTextView = getView(R.id.correctAnswersTextView);
-        mPresenter.updateCorrectAnswersText(0);
+        mCorrectAnswers = 0;
+        mPresenter.updateCorrectAnswersText(mCorrectAnswers);
 
         mAttemptsTextView = getView(R.id.attempsTextView);
-        mAttempsNumber = 0;
-        mPresenter.updateAttempsText(mAttempsNumber);
+        int attempts = 0;
+        mPresenter.updateAttempsText(attempts);
 
         mQuestionTextView = getView(R.id.questionTextView);
-        mCurrentQuestion = mQuiz.getQuestion();
+        mCurrentQuestion = mQuiz.generateQuestion();
         setQuestion(mCurrentQuestion);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        mSoundPlayer.dispose();
     }
 
     @Override
@@ -189,23 +166,15 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         return (T) findViewById(id);
     }
 
-    private String getResult(Question question){
-
-        if(question.isCorrect())
-        {
-            return "Correct Answer!!";
-        }
-        else
-        {
-            return "Wrong Answer :(, please don't cry";
-        }
-    }
-
     private void displayResult(Context ctx, String message){
 
         Toast.makeText(
                 ctx,
                 message,
                 Toast.LENGTH_SHORT).show();
+    }
+
+    public Question getCurrentQuestion() {
+        return mCurrentQuestion;
     }
 }

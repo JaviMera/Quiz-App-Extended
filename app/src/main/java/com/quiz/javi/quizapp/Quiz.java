@@ -2,6 +2,7 @@ package com.quiz.javi.quizapp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import teamtreehouse.quizapp.QuestionBank;
 
@@ -10,39 +11,53 @@ import teamtreehouse.quizapp.QuestionBank;
  */
 
 public class Quiz {
+    private Question mCurrentQuestion;
+    private int mMin;
+    private int mMax;
+    private int mQuestionNumber;
 
-    private List<Question> mQuestions;
-    private int mCurrent;
-
-    public Quiz(QuestionBank qBank){
-
-        mCurrent = 0;
-        mQuestions = new ArrayList<>();
-
-        // Get the length of only one of the arrays, as all of them have the same number of elements
-        int size = qBank.leftAdders.length;
-
-        for(int index = 0 ; index < size ; index++)
-        {
-            mQuestions.add(new Question(
-                index + 1,
-                qBank.leftAdders[index],
-                qBank.rightAdders[index],
-                qBank.correctAnswers[index],
-                qBank.firstIncorrectAnswers[index],
-                qBank.secondIncorrectAnswers[index]
-            ));
-        }
+    public Quiz(int leftAdderRange, int rightAdderRange){
+        mMin = leftAdderRange;
+        mMax = rightAdderRange;
     }
 
-    public Question getQuestion() {
-        Question question = mQuestions.get(mCurrent % totalQuestions());
-        mCurrent++;
+    public Question generateQuestion(){
 
-        return question;
+        mQuestionNumber++;
+        int leftAdder = getAdderRandom(mMin, mMax);
+        int rightAdder = getAdderRandom(mMin, mMax);
+        int correctAnswer = leftAdder + rightAdder;
+        int firstIncorrectAnswer = getIncorrectRandom(correctAnswer - 10, correctAnswer + 10, correctAnswer);
+        int secondIncorrectAnswer = getIncorrectRandom(correctAnswer - 10, correctAnswer + 10, correctAnswer);
+
+        mCurrentQuestion = new Question(
+                mQuestionNumber,
+                leftAdder,
+                rightAdder,
+                correctAnswer,
+                firstIncorrectAnswer,
+                secondIncorrectAnswer == firstIncorrectAnswer ? secondIncorrectAnswer + 1 : secondIncorrectAnswer
+        );
+
+        return mCurrentQuestion;
     }
 
-    public int totalQuestions() {
-        return mQuestions.size();
+    private int getAdderRandom(int min, int max){
+        int random = 0;
+
+        do{
+            random = new Random().nextInt(max + 1 - min) + min;
+        }while(random == 0);
+
+        return random;
+    }
+
+    private int getIncorrectRandom(int min, int max, int answer) {
+        int random = 0;
+        do{
+            random = new Random().nextInt(max + 1 - min) + min;
+        }while(random == answer && random == 0);
+
+        return random;
     }
 }

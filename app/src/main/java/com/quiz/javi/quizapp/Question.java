@@ -14,13 +14,17 @@ public class Question {
     private int mRightAdder;
     private List<Answer> mAnswers;
 
+    public static final String CORRECT_MESSAGE = "Correct Answer!!";
+    public static final String INCORRECT_MESSAGE = "Incorrect answer :(";
+    public static final String NO_SELECTION_MESSAGAE = "Please select an answer before submitting :)";
+
     public Question(
-                int questionNumber,
-                int leftAdder,
-                int rightAdder,
-                int correctAnswer,
-                int incorrectAnswer1,
-                int incorrectAnswer2)
+            int questionNumber,
+            int leftAdder,
+            int rightAdder,
+            int correctAnswer,
+            int incorrectAnswer1,
+            int incorrectAnswer2)
     {
         mNumber = questionNumber;
         mLeftAdder = leftAdder;
@@ -32,14 +36,19 @@ public class Question {
     }
 
     public String getText(){
-        return "What is " + mLeftAdder + " + " + mRightAdder + "?";
+
+        if(mRightAdder < 0) {
+            return "What is " + mLeftAdder + " + " + "(" + mRightAdder + ")" + "?";
+        }
+
+        return "What is " +mLeftAdder + " + " + mRightAdder + "?";
     }
 
-    public boolean isCorrect() {
+    public boolean isCorrect(int answerSelected) {
 
         for(Answer answer : mAnswers)
         {
-            if(answer.getSelected())
+            if(answerSelected == answer.getValue())
             {
                 return answer instanceof CorrectAnswer;
             }
@@ -60,35 +69,21 @@ public class Question {
         return answers;
     }
 
-    public void setAnswerSelected(int answerSelected){
-
-        for(Answer answer : mAnswers)
-        {
-            if(answer.getValue() == answerSelected)
-            {
-                answer.select();
-            }
-            else
-            {
-                answer.deselect();
-            }
-        }
-    }
-
-    public int getAnswerSelected() {
-
-        for(Answer answer : mAnswers)
-        {
-            if(answer.getSelected())
-            {
-                return answer.getValue();
-            }
-        }
-
-        return -1;
-    }
-
     public int getNumber() {
         return mNumber;
+    }
+
+    public String getAnswerMessage(boolean result) {
+
+        if(result)
+        {
+            return CORRECT_MESSAGE;
+        }
+
+        return INCORRECT_MESSAGE;
+    }
+
+    public String getErrorMessage() {
+        return NO_SELECTION_MESSAGAE;
     }
 }
