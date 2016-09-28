@@ -6,4 +6,39 @@
         <item name="colorPrimary">@color/submitColorPressed</item>
     </style>
 
+    <!-- Custom Text Views -->
+    <style name="TextViewBase">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="CorrectTextView" parent="TextViewBase">
+        <item name="android:textColor">@color/correctAnswerColor</item>
+        <item name="android:layout_marginBottom">@dimen/score_text_view_margin</item>
+        <item name="android:layout_marginRight">@dimen/score_text_view_margin</item>
+    </style>
+
+    <style name="AttemptsTextView" parent="TextViewBase">
+        <item name="android:textColor">@color/attemptsColor</item>
+        <item name="android:layout_marginBottom">@dimen/score_text_view_margin</item>
+        <item name="android:layout_marginRight">@dimen/score_text_view_margin</item>
+    </style>
+
+    <style name="QuestionTextView" parent="TextViewBase">
+        <item name="android:textColor">@color/questionColor</item>
+        <item name="android:layout_marginTop">@dimen/question_text_view_margin</item>
+        <item name="android:layout_marginBottom">@dimen/question_text_view_margin</item>
+        <item name="android:textSize">25sp</item>
+    </style>
+
+    <!-- Custom Radio Buttons -->
+    <style name="RadioButtonBase">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_margin">@dimen/answer_radio_button_margin</item>
+        <item name="android:paddingLeft">@dimen/answer_radio_button_padding</item>
+    </style>
 </resources>

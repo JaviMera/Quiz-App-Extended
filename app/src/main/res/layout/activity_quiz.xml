@@ -30,26 +30,16 @@
         <TextView
             android:id="@+id/correctAnswersTextView"
             android:text="@string/correct_answers"
-            android:textColor="@color/correctAnswerColor"
-            android:textSize="18sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/CorrectTextView"
             android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp" />
+            android:layout_alignParentBottom="true"             />
 
         <TextView
             android:id="@+id/attempsTextView"
+            android:layout_above="@+id/correctAnswersTextView"
             android:text="@string/attempted_questions"
-            android:textColor="@color/attemptsColor"
-            android:textSize="18sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_alignParentRight="true"
-            android:layout_above="@+id/correctAnswersTextView"/>
+            style="@style/AttemptsTextView"
+            android:layout_alignParentRight="true" />
 
     </RelativeLayout>
 
@@ -60,14 +50,8 @@
 
         <TextView
             android:id="@+id/questionTextView"
-            android:textColor="@color/questionColor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp"
-            android:typeface="serif" />
+            style="@style/QuestionTextView"
+            android:layout_centerHorizontal="true" />
 
         <RadioGroup
             android:id="@+id/radioButtonGroup"
@@ -78,35 +62,15 @@
 
             <RadioButton
                 android:id="@+id/radioButton1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:buttonTint="@color/submitColorPressed"
-                android:paddingLeft="10dp"/>
+                style="@style/RadioButtonBase" />
 
             <RadioButton
                 android:id="@+id/radioButton2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:layout_gravity="center"
-                android:textSize="20sp"
-                android:buttonTintMode="src_in"
-                android:buttonTint="@color/submitColorPressed"
-                android:paddingLeft="10dp"/>
+                style="@style/RadioButtonBase" />
 
             <RadioButton
                 android:id="@+id/radioButton3"
-                android:textSize="20sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:layout_gravity="center"
-                android:buttonTint="@color/submitColorPressed"
-                android:paddingLeft="10dp"/>
+                style="@style/RadioButtonBase" />
 
         </RadioGroup>
 
