@@ -48,8 +48,10 @@ public class QuizTest {
         // Assert that at least every number generated, is constrained in the range provided in quiz constructor
         assertTrue(leftAdder >= min && leftAdder <= max);
         assertTrue(rightAdder >= min && rightAdder <= max);
-        assertTrue(answers.get(0) >= min && answers.get(0) <= max);
-        assertTrue(answers.get(1) >= min && answers.get(1) <= max);
-        assertTrue(answers.get(2) >= min && answers.get(2) <= max);
+
+        int correctAnswer = leftAdder + rightAdder;
+        assertEquals(correctAnswer, (int)answers.get(0));
+        assertTrue(answers.get(1) >= correctAnswer - 10 && answers.get(1) <= correctAnswer + 10);
+        assertTrue(answers.get(2) >= correctAnswer - 10 && answers.get(2) <= correctAnswer + 10);
     }
 }

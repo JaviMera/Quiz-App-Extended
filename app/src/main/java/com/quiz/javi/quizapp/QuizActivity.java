@@ -20,8 +20,6 @@ import java.util.Locale;
 
 public class QuizActivity extends AppCompatActivity implements QuizActivityView{
 
-    private final Typeface OSWALD_REGULAR = Typeface.createFromAsset(getAssets(), "fonts/Oswald-Regular.ttf");
-
     private int mCorrectAnswers;
     private Question mCurrentQuestion;
     private SoundPlayer mSoundPlayer;
@@ -40,6 +38,8 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+//        Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/Oswald-Regular.ttf");
+
         mAnswerButtons = new SparseArray<>();
         mSoundPlayer = new SoundPlayer(
                 MediaPlayer.create(this, R.raw.job_done),
@@ -49,6 +49,19 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
 
         mQuiz = new Quiz(-100, 100);
         mPresenter = new QuizActivityPresenter(this);
+
+        mCorrectAnswersTextView = getView(R.id.correctAnswersTextView);
+//        mCorrectAnswersTextView.setTypeface(typeFace);
+        mCorrectAnswers = 0;
+        mPresenter.updateCorrectAnswersText(mCorrectAnswers);
+
+        mAttemptsTextView = getView(R.id.attempsTextView);
+//        mAttemptsTextView.setTypeface(typeFace);
+        int attempts = 0;
+        mPresenter.updateAttempsText(attempts);
+
+        mQuestionTextView = getView(R.id.questionTextView);
+//        mQuestionTextView.setTypeface(typeFace);
 
         mSubmitButton = getView(R.id.submitButton);
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
@@ -85,26 +98,13 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         });
 
         mAnswersRadioGroup = getView(R.id.radioButtonGroup);
-
         for(int child = 0 ; child < mAnswersRadioGroup.getChildCount(); child++)
         {
             RadioButton rButton = (RadioButton)mAnswersRadioGroup.getChildAt(child);
-            rButton.setTypeface(OSWALD_REGULAR);
+//            rButton.setTypeface(typeFace);
             mAnswerButtons.append(rButton.getId(), rButton);
         }
 
-        mCorrectAnswersTextView = getView(R.id.correctAnswersTextView);
-        mCorrectAnswersTextView.setTypeface(OSWALD_REGULAR);
-        mCorrectAnswers = 0;
-        mPresenter.updateCorrectAnswersText(mCorrectAnswers);
-
-        mAttemptsTextView = getView(R.id.attempsTextView);
-        mAttemptsTextView.setTypeface(OSWALD_REGULAR);
-        int attempts = 0;
-        mPresenter.updateAttempsText(attempts);
-
-        mQuestionTextView = getView(R.id.questionTextView);
-        mQuestionTextView.setTypeface(OSWALD_REGULAR);
         mCurrentQuestion = mQuiz.generateQuestion();
         setQuestion(mCurrentQuestion);
     }

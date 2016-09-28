@@ -30,7 +30,7 @@ public class QuestionTest {
         int actualSize = question.getAnswers().size();
 
         // Assert
-        assertTrue(actualText.matches("[\\w ]+[\\d]+ \\+ \\(?-?[\\d]+\\)??\\?"));
+        assertTrue(actualText.matches("[\\w ]+-?[\\d]+ \\+ \\(?-?[\\d]+\\)??\\?"));
         Assert.assertEquals(1, actualNumber);
         Assert.assertEquals(3, actualSize);
     }
