@@ -1,17 +1,19 @@
 package com.quiz.javi.quizapp;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.util.SparseArray;
 import android.view.View;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,22 +27,22 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
     private SoundPlayer mSoundPlayer;
     private QuizActivityPresenter mPresenter;
     private Quiz mQuiz;
-    private SparseArray<RadioButton> mAnswerButtons;
+    private SparseArray<AppCompatButton> mAnswerButtons;
 
     public TextView mQuestionTextView;
-    public RadioGroup mAnswersRadioGroup;
-    public AppCompatButton mSubmitButton;
     public TextView mCorrectAnswersTextView;
     public TextView mAttemptsTextView;
+    public AppCompatButton mSubmitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-//        Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/Oswald-Regular.ttf");
+        Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/Oswald-Regular.ttf");
 
         mAnswerButtons = new SparseArray<>();
+
         mSoundPlayer = new SoundPlayer(
                 MediaPlayer.create(this, R.raw.job_done),
                 MediaPlayer.create(this, R.raw.brute_force)
@@ -51,31 +53,47 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         mPresenter = new QuizActivityPresenter(this);
 
         mCorrectAnswersTextView = getView(R.id.correctAnswersTextView);
-//        mCorrectAnswersTextView.setTypeface(typeFace);
+        mCorrectAnswersTextView.setTypeface(typeFace);
         mCorrectAnswers = 0;
         mPresenter.updateCorrectAnswersText(mCorrectAnswers);
 
         mAttemptsTextView = getView(R.id.attempsTextView);
-//        mAttemptsTextView.setTypeface(typeFace);
+        mAttemptsTextView.setTypeface(typeFace);
         int attempts = 0;
         mPresenter.updateAttempsText(attempts);
 
         mQuestionTextView = getView(R.id.questionTextView);
-//        mQuestionTextView.setTypeface(typeFace);
+        mQuestionTextView.setTypeface(typeFace);
+
+        initializeButtonsArray(
+                mAnswerButtons,
+                R.id.buttonAnswer1,
+                R.id.buttonAnswer2,
+                R.id.buttonAnswer3);
 
         mSubmitButton = getView(R.id.submitButton);
+        mSubmitButton.setTypeface(typeFace);
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(mAnswersRadioGroup.getCheckedRadioButtonId() != -1) {
+                AppCompatButton button = null;
+                for(int i = 0 ; i < mAnswerButtons.size(); i++)
+                {
+                    int key = mAnswerButtons.keyAt(i);
+                    if(mAnswerButtons.get(key).isSelected())
+                    {
+                        button = mAnswerButtons.get(key);
+                        break;
+                    }
+                }
+
+                if(button != null) {
+                    int answerSelected = Integer.parseInt(button.getText().toString());
+                    boolean result = mCurrentQuestion.isCorrect(answerSelected);
 
                     int attempts = mCurrentQuestion.getNumber();
                     mPresenter.updateAttempsText(attempts);
-
-                    RadioButton rButton = mAnswerButtons.get(mAnswersRadioGroup.getCheckedRadioButtonId());
-                    int answerSelected = Integer.parseInt(rButton.getText().toString());
-                    boolean result = mCurrentQuestion.isCorrect(answerSelected);
 
                     mCorrectAnswers += result ? 1 : 0;
                     mPresenter.updateCorrectAnswersText(mCorrectAnswers);
@@ -84,29 +102,41 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
                     displayResult(v.getContext(), message);
 
                     mSoundPlayer.play(result);
-
-                    mAnswersRadioGroup.clearCheck();
                     mCurrentQuestion = mQuiz.generateQuestion();
-                    setQuestion(mCurrentQuestion);
+                    setQuestion(mCurrentQuestion, mAnswerButtons);
                 }
                 else{
-
                     String noSelectionMessage = mCurrentQuestion.getErrorMessage();
                     displayResult(v.getContext(), noSelectionMessage);
                 }
-            }
-        });
+        }});
 
-        mAnswersRadioGroup = getView(R.id.radioButtonGroup);
-        for(int child = 0 ; child < mAnswersRadioGroup.getChildCount(); child++)
-        {
-            RadioButton rButton = (RadioButton)mAnswersRadioGroup.getChildAt(child);
-//            rButton.setTypeface(typeFace);
-            mAnswerButtons.append(rButton.getId(), rButton);
-        }
 
         mCurrentQuestion = mQuiz.generateQuestion();
-        setQuestion(mCurrentQuestion);
+        setQuestion(mCurrentQuestion, mAnswerButtons);
+    }
+
+    private void initializeButtonsArray(SparseArray<AppCompatButton> buttons, int...ids){
+
+        for(int id : ids)
+        {
+            AppCompatButton button = getView(id);
+            buttons.append(id, button);
+        }
+    }
+
+    public void onButtonAnswerListener(View view) {
+
+        for(int i = 0 ; i < mAnswerButtons.size() ; i++)
+        {
+            AppCompatButton button = mAnswerButtons.valueAt(i);
+            button.setSelected(false);
+            button.setTextColor(Color.parseColor(getString(R.string.buttonUnselected)));
+        }
+
+        AppCompatButton button = mAnswerButtons.get(view.getId());
+        button.setSelected(true);
+        button.setTextColor(Color.parseColor(getString(R.string.buttonSelected)));
     }
 
     @Override
@@ -122,12 +152,6 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
     }
 
     @Override
-    public void updateRadioButtonTextView(int index, String text) {
-        RadioButton rButton = (RadioButton)mAnswersRadioGroup.getChildAt(index);
-        rButton.setText(text);
-    }
-
-    @Override
     public void updateCorrectAnswersTextView(int correctNumber) {
         mCorrectAnswersTextView.setText(String.format(Locale.ENGLISH, "Correct: %d", correctNumber));
     }
@@ -138,26 +162,27 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
     }
 
     @Override
-    public void selectButtonOnAnsweredQuestion(int selectedAnswer) {
-        for (int child = 0; child < mAnswersRadioGroup.getChildCount(); child++) {
-            RadioButton rButton = (RadioButton) mAnswersRadioGroup.getChildAt(child);
-            int rButtonAnswer = Integer.parseInt(rButton.getText().toString());
+    public void updateButtonAnswerTextView(int id, String answerText) {
 
-            if (selectedAnswer == rButtonAnswer) {
-                mAnswerButtons.get(rButton.getId()).setChecked(true);
-            }
-        }
+        mAnswerButtons
+            .get(id)
+            .setText(answerText);
     }
 
-    private void setQuestion(Question question){
+    private void setQuestion(Question question, SparseArray<AppCompatButton> answerButtons){
 
         mPresenter.updateQuestionText(question.getText());
 
         List<Integer> values = new ArrayList<>(question.getAnswers());
         Collections.shuffle(values);
-        for(int i = 0 ; i < mAnswerButtons.size() ; i++)
+
+        for(int i = 0 ; i < answerButtons.size(); i++)
         {
-            mPresenter.updateRadioButtonText(i, String.format(Locale.ENGLISH,"%d", values.get(i)));
+            int buttonId = answerButtons.keyAt(i);
+            AppCompatButton button = answerButtons.get(buttonId);
+            button.setSelected(false);
+            button.setTextColor(Color.parseColor(getString(R.string.buttonUnselected)));
+            mPresenter.updateButtonAnswerText(buttonId, String.format(Locale.ENGLISH, "%d", values.get(i)));
         }
     }
 
@@ -171,9 +196,5 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
                 ctx,
                 message,
                 Toast.LENGTH_SHORT).show();
-    }
-
-    public Question getCurrentQuestion() {
-        return mCurrentQuestion;
     }
 }

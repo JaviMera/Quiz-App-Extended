@@ -9,8 +9,7 @@ import android.widget.Button;
 public interface QuizActivityView {
 
     void updateQuestionTextView(String text);
-    void updateRadioButtonTextView(int index, String text);
     void updateCorrectAnswersTextView(int correctNumber);
     void updateAttempsTextView(int attemptsNumber);
-    void selectButtonOnAnsweredQuestion(int selectedAnswer);
+    void updateButtonAnswerTextView(int index, String answerText);
 }

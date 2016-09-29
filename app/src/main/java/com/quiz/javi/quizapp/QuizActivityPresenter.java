@@ -16,10 +16,6 @@ public class QuizActivityPresenter {
         mView.updateQuestionTextView(question);
     }
 
-    public void updateRadioButtonText(int index, String text){
-        mView.updateRadioButtonTextView(index, text);
-    }
-
     public void updateCorrectAnswersText(int correctNumber) {
         mView.updateCorrectAnswersTextView(correctNumber);
     }
@@ -28,7 +24,7 @@ public class QuizActivityPresenter {
         mView.updateAttempsTextView(attemptsNumber);
     }
 
-    public void selectButtonOnSelectedAnswer(int answer) {
-        mView.selectButtonOnAnsweredQuestion(answer);
+    public void updateButtonAnswerText(int id, String answerText) {
+        mView.updateButtonAnswerTextView(id, answerText);
     }
 }

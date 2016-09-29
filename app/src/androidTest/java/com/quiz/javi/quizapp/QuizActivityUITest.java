@@ -36,15 +36,15 @@ public class QuizActivityUITest {
         // Arrange
         String initialQuestionRegex = "[\\w ]+-?[\\d]+ \\+ \\(?-?[\\d]+\\)??\\?";
         String initialScoreRegex = "[\\w]+\\S[ ]+0";
-        String initialRadioButtonRegex = "-?\\d+";
+        String buttonAnswerRegex = "-?\\d+";
 
         // Assert
         onView(withId(R.id.questionTextView)).check(matches(new RegexMatcher(initialQuestionRegex)));
         onView(withId(R.id.correctAnswersTextView)).check(matches(new RegexMatcher(initialScoreRegex)));
         onView(withId(R.id.attempsTextView)).check(matches(new RegexMatcher(initialScoreRegex)));
-        onView(withId(R.id.radioButton1)).check(matches(new RegexMatcher(initialRadioButtonRegex)));
-        onView(withId(R.id.radioButton2)).check(matches(new RegexMatcher(initialRadioButtonRegex)));
-        onView(withId(R.id.radioButton3)).check(matches(new RegexMatcher(initialRadioButtonRegex)));
+        onView(withId(R.id.buttonAnswer1)).check(matches(new RegexMatcher(buttonAnswerRegex)));
+        onView(withId(R.id.buttonAnswer2)).check(matches(new RegexMatcher(buttonAnswerRegex)));
+        onView(withId(R.id.buttonAnswer3)).check(matches(new RegexMatcher(buttonAnswerRegex)));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class QuizActivityUITest {
         String correctScoreRegex = "[\\w]+\\S[ ]+[01]";
 
         // Act
-        onView(withId(R.id.radioButton1)).perform(click()); // select first radio button to see if we get it right or wrong
+        onView(withId(R.id.buttonAnswer1)).perform(click()); // select first button to see if we get it right or wrong
         onView(withId(R.id.submitButton)).perform(click());
 
         // Assert

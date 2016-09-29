@@ -40,14 +40,14 @@ public class QuizActivityPresenterTest {
     public void updateButtonAnswerText(){
 
         // Arrange
-        String answerText = "How about no";
+        String answerText = "100";
         int index = 0;
 
         // Act
-        presenter.updateRadioButtonText(index, answerText);
+        presenter.updateButtonAnswerText(index, answerText);
 
         // Assert
-        Mockito.verify(view).updateRadioButtonTextView(index, answerText);
+        Mockito.verify(view).updateButtonAnswerTextView(index, answerText);
     }
 
     @Test
@@ -74,18 +74,5 @@ public class QuizActivityPresenterTest {
 
         // Assert
         Mockito.verify(view).updateAttempsTextView(attemptsNumber);
-    }
-
-    @Test
-    public void selectButtonOnSelectedAnswer(){
-
-        // Arrange
-        int answer = 7;
-
-        // Act
-        presenter.selectButtonOnSelectedAnswer(answer);
-
-        // Assert
-        Mockito.verify(view).selectButtonOnAnsweredQuestion(answer);
     }
 }

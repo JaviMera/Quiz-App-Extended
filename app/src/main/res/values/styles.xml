@@ -32,13 +32,18 @@
         <item name="android:textSize">25sp</item>
     </style>
 
-    <!-- Custom Radio Buttons -->
-    <style name="RadioButtonBase">
+    <!-- Custom Buttons -->
+    <style name="ButtonBase">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:layout_margin">@dimen/answer_radio_button_margin</item>
-        <item name="android:paddingLeft">@dimen/answer_radio_button_padding</item>
     </style>
+
+    <style name="ButtonAnswerView" parent="ButtonBase">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@drawable/answer_button_background</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">@dimen/button_answer_view_margin</item>
+        <item name="android:onClick">onButtonAnswerListener</item>
+    </style>
+
 </resources>

@@ -5,4 +5,6 @@
     <string name="attempted_questions">Attempts: 0</string>
     <string name="correct_answers">Correct: 0</string>
     <string name="quizLabel">The App Math</string>
+    <string name="buttonUnselected">#A7A9AB</string>
+    <string name="buttonSelected">#000000</string>
 </resources>
