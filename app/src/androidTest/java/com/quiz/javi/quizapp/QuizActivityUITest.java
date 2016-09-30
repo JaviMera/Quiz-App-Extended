@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.view.WindowCallbackWrapper;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.TextView;
@@ -17,9 +16,6 @@ import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.List;
-import java.util.Locale;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -86,8 +82,9 @@ public class QuizActivityUITest {
         String correctScoreRegex = "[\\w]+\\S[ ]+[01]";
         String correctButtonText = "Correct";
         String incorrectButtonText = "LOL NOOB INCORRECT";
-        int buttonGreen = Color.parseColor("#00A550");
-        int buttonOrange = Color.parseColor("#F7931D");
+        int correctColor = Color.parseColor("#00A550");
+        int incorrectColor = Color.parseColor("#F7931D");
+        int unselectedColor = Color.parseColor(("#A7A9AB"));
 
         // Act
         onView(withId(R.id.buttonAnswer1)).perform(click()); // select first button to see if we get it right or wrong
@@ -104,7 +101,7 @@ public class QuizActivityUITest {
 
         // Assert Submit button is disabled after submitting an answer and also changes color accordingly
         onView(withId(R.id.submitButton)).check(matches(not(isEnabled())));
-        onView(withId(R.id.submitButton)).check(matches(new BackgroundMatcher(buttonGreen, buttonOrange)));
+        onView(withId(R.id.submitButton)).check(matches(new BackgroundMatcher(correctColor, incorrectColor)));
         onView(withId(R.id.submitButton)).check(matches(new ContainsMatcher(correctButtonText, incorrectButtonText)));
 
         // Assert Next button is enabled after submitting an answer
@@ -116,7 +113,7 @@ public class QuizActivityUITest {
 
         // Arrange
         String questionText = activityTestRule.getActivity().mQuestionTextView.getText().toString();
-        int buttonEnabledColor = Color.parseColor("#182B78");
+        int enabledColor = Color.parseColor("#182B78");
 
         // Act
         onView(withId(R.id.buttonAnswer1)).perform(click()); // select first button to see if we get it right or wrong
@@ -126,15 +123,17 @@ public class QuizActivityUITest {
         // Assert
         onView(withId(R.id.questionTextView)).check(matches(not(withText(questionText))));
 
-        // Assert all button answers are enabled after clickign next
+        // Assert all button answers are enabled after clicking next
         onView(withId(R.id.buttonAnswer1)).check(matches(isEnabled()));
         onView(withId(R.id.buttonAnswer2)).check(matches(isEnabled()));
         onView(withId(R.id.buttonAnswer3)).check(matches(isEnabled()));
 
+        // Assert submit button after clicking next
         onView(withId(R.id.submitButton)).check(matches(withText("Submit")));
         onView(withId(R.id.submitButton)).check(matches(isEnabled()));
-        onView(withId(R.id.submitButton)).check(matches(new BackgroundMatcher(buttonEnabledColor)));
+        onView(withId(R.id.submitButton)).check(matches(new BackgroundMatcher(enabledColor)));
 
+        // Assert next button after clicking on it
         onView(withId(R.id.nextQuestionButton)).check(matches(not(isEnabled())));
     }
 
