@@ -9,4 +9,14 @@
         android:state_enabled="true"
         android:state_selected="true"
         android:drawable="@drawable/rounded_selected_answer_button"/>
+
+    <item
+        android:state_enabled="false"
+        android:state_selected="false"
+        android:drawable="@drawable/rounded_not_selected__answer_button"/>
+
+    <item
+        android:state_enabled="false"
+        android:state_selected="true"
+        android:drawable="@drawable/rounded_selected_answer_button"/>
 </selector>

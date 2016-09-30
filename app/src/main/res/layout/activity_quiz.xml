@@ -50,7 +50,6 @@
         <TextView
             android:id="@+id/questionTextView"
             style="@style/QuestionTextView"
-            android:text="what is your name"
             android:layout_centerInParent="true"
             android:layout_alignParentTop="true"/>
 
@@ -81,15 +80,31 @@
 
         <Button
             android:id="@+id/submitButton"
-            android:background="@drawable/submit_button_drawable"
+            android:background="@drawable/submit_button_background"
             android:text="@string/submit_button"
             android:textSize="20sp"
             android:textColor="@color/submitTextColor"
-            android:paddingRight="25dp"
-            android:paddingLeft="25dp"
-            android:layout_width="wrap_content"
+            android:textAllCaps="true"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="70dp"/>
+
+        <Button
+            android:id="@+id/nextQuestionButton"
+            android:layout_below="@+id/submitButton"
+            android:background="@drawable/next_button_background"
+            android:text="@string/next_button"
+            android:textSize="20sp"
+            android:textColor="@color/submitTextColor"
+            android:textAllCaps="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="70dp"
+            android:enabled="false"/>
 
     </RelativeLayout>
 

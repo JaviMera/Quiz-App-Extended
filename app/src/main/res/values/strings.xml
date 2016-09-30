@@ -5,6 +5,11 @@
     <string name="attempted_questions">Attempts: 0</string>
     <string name="correct_answers">Correct: 0</string>
     <string name="quizLabel">The App Math</string>
-    <string name="buttonUnselected">#A7A9AB</string>
-    <string name="buttonSelected">#000000</string>
+    <string name="button_answer_unselected">#A7A9AB</string>
+    <string name="button_answer_selected">#000000</string>
+    <string name="next_button">NEXT</string>
+    <string name="submit_button_correct">Correct</string>
+    <string name="submit_button_incorrect">LOL NOOB INCORRECT</string>
+    <string name="correct_color">#00A550</string>
+    <string name="incorrect_color">#F7931D</string>
 </resources>

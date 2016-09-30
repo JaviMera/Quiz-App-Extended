@@ -16,7 +16,7 @@ public class Question {
 
     public static final String CORRECT_MESSAGE = "Correct Answer!!";
     public static final String INCORRECT_MESSAGE = "Incorrect answer :(";
-    public static final String NO_SELECTION_MESSAGAE = "Please select an answer before submitting :)";
+    public static final String NO_SELECTION_MESSAGAE = "Please select an answer before submitting";
 
     public Question(
             int questionNumber,

@@ -9,5 +9,8 @@
     <color name="submitColorPressed">#4255A5</color>
     <color name="submitColorNotPressed">#182B78</color>
     <color name="submitTextColor">#FFFFFF</color>
+    <color name="nextButtonColorDisabled">#2C293E</color>
     <color name="questionColor">#080710</color>
+    <color name="correct_color">#00A550</color>
+    <color name="incorrect_color">#F7931D</color>
 </resources>
