@@ -1,5 +1,8 @@
 package com.quiz.javi.quizapp;
 
+import android.graphics.Color;
+import android.widget.Button;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,14 +43,14 @@ public class QuizActivityPresenterTest {
     public void updateButtonAnswerText(){
 
         // Arrange
+        Button button = new Button(null);
         String answerText = "100";
-        int index = 0;
 
         // Act
-        presenter.updateButtonAnswerText(index, answerText);
+        presenter.updateButtonText(button, answerText);
 
         // Assert
-        Mockito.verify(view).updateButtonAnswerTextView(index, answerText);
+        Mockito.verify(view).updateButtonAnswerTextView(button, answerText);
     }
 
     @Test
@@ -74,5 +77,61 @@ public class QuizActivityPresenterTest {
 
         // Assert
         Mockito.verify(view).updateAttempsTextView(attemptsNumber);
+    }
+
+    @Test
+    public void updateButtonTextColor() throws Exception {
+
+        // Arrange
+        Button button = new Button(null);
+        int color = Color.RED;
+
+        // Act
+        presenter.updateButtonTextColor(button, color);
+
+        // Assert
+        Mockito.verify(view).updateButtonTextColor(button, color);
+    }
+
+    @Test
+    public void updateButtonBackgroundDrawable(){
+
+        // Assert
+        Button button = new Button(null);
+        int someDrawable = 123;
+
+        // Act
+        presenter.updateButtonBackgroundDrawable(button, someDrawable);
+
+        // Assert
+        Mockito.verify(view).updateButtonBackgroundDrawable(button, someDrawable);
+    }
+
+    @Test
+    public void updateButtonState() throws Exception {
+
+        // Assert
+        Button button = new Button(null);
+        boolean enabled = false;
+
+        // Act
+        presenter.updateButtonState(button, enabled);
+
+        // Assert
+        Mockito.verify(view).updateButtonEnabledState(button, enabled);
+    }
+
+    @Test
+    public void updateButtonSelect() throws Exception {
+
+        // Assert
+        Button button = new Button(null);
+        boolean selected = false;
+
+        // Act
+        presenter.updateButtonSelectState(button, selected);
+
+        // Assert
+        Mockito.verify(view).updateButtonSelectState(button, selected);
     }
 }

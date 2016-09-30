@@ -11,5 +11,9 @@ public interface QuizActivityView {
     void updateQuestionTextView(String text);
     void updateCorrectAnswersTextView(int correctNumber);
     void updateAttempsTextView(int attemptsNumber);
-    void updateButtonAnswerTextView(int index, String answerText);
+    void updateButtonAnswerTextView(Button button, String answerText);
+    void updateButtonTextColor(Button button, int color);
+    void updateButtonBackgroundDrawable(Button button, int drawable);
+    void updateButtonEnabledState(Button button, boolean enabled);
+    void updateButtonSelectState(Button button, boolean selected);
 }

@@ -3,13 +3,13 @@ package com.quiz.javi.quizapp;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,9 +80,11 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
             for(int i = 0 ; i < mAnswerButtons.size(); i++)
             {
                 int key = mAnswerButtons.keyAt(i);
-                if(mAnswerButtons.get(key).isSelected())
+                AppCompatButton answerButton = mAnswerButtons.get(key);
+
+                if(answerButton.isSelected())
                 {
-                    button = mAnswerButtons.get(key);
+                    button = answerButton;
                     break;
                 }
             }
@@ -94,33 +96,34 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
                 return;
             }
 
-            for(int i = 0 ; i < mAnswerButtons.size() ; i++)
-            {
+            for(int i = 0 ; i < mAnswerButtons.size(); i++) {
                 int key = mAnswerButtons.keyAt(i);
-                mAnswerButtons.get(key).setEnabled(false);
+                AppCompatButton answerButton = mAnswerButtons.get(key);
+                mPresenter.updateButtonState(answerButton, false);
             }
 
             int answerSelected = Integer.parseInt(button.getText().toString());
             boolean result = mCurrentQuestion.isCorrect(answerSelected);
 
-            mNextButton.setEnabled(true);
-            mSubmitButton.setEnabled(false);
+            mPresenter.updateButtonState(mNextButton, true);
+            mPresenter.updateButtonState(mSubmitButton, false);
 
             if(result)
             {
-                button.setBackgroundResource(R.drawable.selected_correct_answer_button_background);
-                button.setTextColor(Color.parseColor(getString(R.string.correct_color)));
-                mSubmitButton.setBackgroundResource(R.drawable.submit_correct_background);
-                mSubmitButton.setText(getString(R.string.submit_button_correct));
+                mPresenter.updateButtonBackgroundDrawable(button, R.drawable.selected_correct_answer_button_background);
+                mPresenter.updateButtonTextColor(button, Color.parseColor(getString(R.string.correct_color)));
+                mPresenter.updateButtonBackgroundDrawable(mSubmitButton, R.drawable.submit_correct_background);
+                mPresenter.updateButtonText(mSubmitButton, getString(R.string.submit_button_correct));
+
                 mCorrectAnswers++;
                 mPresenter.updateCorrectAnswersText(mCorrectAnswers);
             }
             else
             {
-                button.setBackgroundResource(R.drawable.selected_incorrect_answer_button_background);
-                button.setTextColor(Color.parseColor(getString(R.string.incorrect_color)));
-                mSubmitButton.setBackgroundResource(R.drawable.submit_incorrect_background);
-                mSubmitButton.setText(getString(R.string.submit_button_incorrect));
+                mPresenter.updateButtonBackgroundDrawable(button, R.drawable.selected_incorrect_answer_button_background);
+                mPresenter.updateButtonTextColor(button, Color.parseColor(getString(R.string.incorrect_color)));
+                mPresenter.updateButtonBackgroundDrawable(mSubmitButton, R.drawable.submit_incorrect_background);
+                mPresenter.updateButtonText(mSubmitButton, getString(R.string.submit_button_incorrect));
             }
 
             int attempts = mCurrentQuestion.getNumber();
@@ -140,16 +143,17 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
                 for(int i = 0 ; i < mAnswerButtons.size() ; i++)
                 {
                     int key = mAnswerButtons.keyAt(i);
-                    mAnswerButtons.get(key).setEnabled(true);
-                    mAnswerButtons.get(key).setSelected(false);
+                    AppCompatButton button = mAnswerButtons.get(key);
+                    mPresenter.updateButtonState(button, true);
+                    mPresenter.updateButtonSelectState(button, false);
                 }
 
-                mSubmitButton.setText(getString(R.string.submit_button));
-                mSubmitButton.setEnabled(true);
-                mSubmitButton.setBackgroundResource(R.drawable.submit_button_background);
+                mPresenter.updateButtonText(mSubmitButton, getString(R.string.submit_button));
+                mPresenter.updateButtonBackgroundDrawable(mSubmitButton, R.drawable.submit_button_background);
+                mPresenter.updateButtonState(mSubmitButton, true);
 
                 // disable this view which is the next button
-                v.setEnabled(false);
+                mPresenter.updateButtonState((AppCompatButton)v, false);
             }
         });
 
@@ -172,13 +176,18 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         for(int i = 0 ; i < mAnswerButtons.size() ; i++)
         {
             AppCompatButton button = mAnswerButtons.valueAt(i);
-            button.setSelected(false);
-            button.setTextColor(Color.parseColor(getString(R.string.button_answer_unselected)));
-        }
 
-        AppCompatButton button = mAnswerButtons.get(view.getId());
-        button.setSelected(true);
-        button.setTextColor(Color.parseColor(getString(R.string.button_answer_selected)));
+            if(view.getId() == button.getId())
+            {
+                mPresenter.updateButtonSelectState(button, true);
+                mPresenter.updateButtonTextColor(button, Color.parseColor(getString(R.string.button_answer_selected)));
+            }
+            else
+            {
+                mPresenter.updateButtonSelectState(button, false);
+                mPresenter.updateButtonTextColor(button, Color.parseColor(getString(R.string.button_answer_unselected)));
+            }
+        }
     }
 
     @Override
@@ -204,11 +213,28 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
     }
 
     @Override
-    public void updateButtonAnswerTextView(int id, String answerText) {
+    public void updateButtonAnswerTextView(Button button, String answerText) {
+        button.setText(answerText);
+    }
 
-        mAnswerButtons
-            .get(id)
-            .setText(answerText);
+    @Override
+    public void updateButtonTextColor(Button button, int color) {
+        button.setTextColor(color);
+    }
+
+    @Override
+    public void updateButtonBackgroundDrawable(Button button, int drawable) {
+        button.setBackgroundResource(drawable);
+    }
+
+    @Override
+    public void updateButtonEnabledState(Button button, boolean enabled) {
+        button.setEnabled(enabled);
+    }
+
+    @Override
+    public void updateButtonSelectState(Button button, boolean selected) {
+        button.setSelected(selected);
     }
 
     private void setQuestion(Question question, SparseArray<AppCompatButton> answerButtons){
@@ -222,10 +248,10 @@ public class QuizActivity extends AppCompatActivity implements QuizActivityView{
         {
             int buttonId = answerButtons.keyAt(i);
             AppCompatButton button = answerButtons.get(buttonId);
-            button.setSelected(false);
-            button.setTextColor(Color.parseColor(getString(R.string.button_answer_unselected)));
-            button.setBackgroundResource(R.drawable.selector_answer_button_background);
-            mPresenter.updateButtonAnswerText(buttonId, String.format(Locale.ENGLISH, "%d", values.get(i)));
+            mPresenter.updateButtonSelectState(button, false);
+            mPresenter.updateButtonTextColor(button, Color.parseColor(getString(R.string.button_answer_unselected)));
+            mPresenter.updateButtonBackgroundDrawable(button, R.drawable.selector_answer_button_background);
+            mPresenter.updateButtonText(button, String.format(Locale.ENGLISH, "%d", values.get(i)));
         }
     }
 

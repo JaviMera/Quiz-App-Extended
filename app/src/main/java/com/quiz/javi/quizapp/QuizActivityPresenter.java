@@ -1,5 +1,7 @@
 package com.quiz.javi.quizapp;
 
+import android.widget.Button;
+
 /**
  * Created by Javi on 9/22/2016.
  */
@@ -24,7 +26,23 @@ public class QuizActivityPresenter {
         mView.updateAttempsTextView(attemptsNumber);
     }
 
-    public void updateButtonAnswerText(int id, String answerText) {
-        mView.updateButtonAnswerTextView(id, answerText);
+    public void updateButtonText(Button button, String answerText) {
+        mView.updateButtonAnswerTextView(button, answerText);
+    }
+
+    public void updateButtonTextColor(Button button, int color) {
+        mView.updateButtonTextColor(button, color);
+    }
+
+    public void updateButtonBackgroundDrawable(Button button, int drawable) {
+        mView.updateButtonBackgroundDrawable(button, drawable);
+    }
+
+    public void updateButtonState(Button button, boolean enabled) {
+        mView.updateButtonEnabledState(button, enabled);
+    }
+
+    public void updateButtonSelectState(Button button, boolean selected){
+        mView.updateButtonSelectState(button, selected);
     }
 }
