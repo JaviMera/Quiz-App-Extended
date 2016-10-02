@@ -3,6 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="score_text_view_margin">10dp</dimen>
-    <dimen name="question_text_view_margin">25dp</dimen>
     <dimen name="button_answer_view_margin">20dp</dimen>
+    <dimen name="question_text_view_text_size">25sp</dimen>
 </resources>
