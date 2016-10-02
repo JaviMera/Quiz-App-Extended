@@ -3,6 +3,7 @@ package com.quiz.javi.quizapp;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -207,7 +208,6 @@ public class QuizActivityUITest {
             if(buttonBackground instanceof StateListDrawable)
             {
                 StateListDrawable backgroundAsStateListDrawable = (StateListDrawable)buttonBackground;
-                backgroundAsColorDrawable = (ColorDrawable)backgroundAsStateListDrawable.getCurrent();
             }
             else if(buttonBackground instanceof ColorDrawable)
             {
