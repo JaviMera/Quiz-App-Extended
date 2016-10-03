@@ -47,24 +47,6 @@ public class Quiz {
 
         return random;
     }
-//
-//    private int getFirstIncorrectRandom(int min, int max, int answer) {
-//        int random = 0;
-//        do{
-//            random = new Random().nextInt(max + 1 - min) + min;
-//        }while(random == answer || random == 0);
-//
-//        return random;
-//    }
-
-    private int getSecondIncorrectRandom(int min, int max, int answer, int firstIncorrect) {
-        int random = 0;
-        do{
-            random = new Random().nextInt(max + 1 - min) + min;
-        }while(random == answer || random == 0 || random == firstIncorrect);
-
-        return random;
-    }
 
     private int getIncorrectRandom(int min, int max, int... conditions)
     {
