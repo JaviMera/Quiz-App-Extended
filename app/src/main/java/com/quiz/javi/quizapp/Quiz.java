@@ -1,10 +1,6 @@
 package com.quiz.javi.quizapp;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-
-import teamtreehouse.quizapp.QuestionBank;
 
 /**
  * Created by Javi on 9/22/2016.
@@ -28,7 +24,7 @@ public class Quiz {
         int rightAdder = getAdderRandom(mMin, mMax);
         int correctAnswer = leftAdder + rightAdder;
         int firstIncorrectAnswer = getIncorrectRandom(correctAnswer - 10, correctAnswer + 10, correctAnswer);
-        int secondIncorrectAnswer = getIncorrectRandom(correctAnswer - 10, correctAnswer + 10, correctAnswer);
+        int secondIncorrectAnswer = getIncorrectRandom(correctAnswer - 10, correctAnswer + 10, correctAnswer, firstIncorrectAnswer);
 
         mCurrentQuestion = new Question(
                 mQuestionNumber,
@@ -36,7 +32,7 @@ public class Quiz {
                 rightAdder,
                 correctAnswer,
                 firstIncorrectAnswer,
-                secondIncorrectAnswer == firstIncorrectAnswer ? secondIncorrectAnswer + 1 : secondIncorrectAnswer
+                secondIncorrectAnswer
         );
 
         return mCurrentQuestion;
@@ -51,12 +47,44 @@ public class Quiz {
 
         return random;
     }
+//
+//    private int getFirstIncorrectRandom(int min, int max, int answer) {
+//        int random = 0;
+//        do{
+//            random = new Random().nextInt(max + 1 - min) + min;
+//        }while(random == answer || random == 0);
+//
+//        return random;
+//    }
 
-    private int getIncorrectRandom(int min, int max, int answer) {
+    private int getSecondIncorrectRandom(int min, int max, int answer, int firstIncorrect) {
         int random = 0;
         do{
             random = new Random().nextInt(max + 1 - min) + min;
-        }while(random == answer && random == 0);
+        }while(random == answer || random == 0 || random == firstIncorrect);
+
+        return random;
+    }
+
+    private int getIncorrectRandom(int min, int max, int... conditions)
+    {
+        int random = 0;
+        boolean canExit;
+
+        do {
+            canExit = true;
+            random = new Random().nextInt(max + 1 - min) + min;
+
+            for (Integer condition : conditions)
+            {
+                if(condition == random)
+                {
+                    canExit = false;
+                    break;
+                }
+            }
+
+        }while(!canExit);
 
         return random;
     }
