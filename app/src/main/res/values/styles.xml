@@ -45,6 +45,7 @@
         <item name="android:background">@drawable/selector_answer_button_background</item>
         <item name="android:textStyle">bold</item>
         <item name="android:onClick">onButtonAnswerListener</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="ButtonSubmit">
